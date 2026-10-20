@@ -3,11 +3,18 @@
 </p>
 
 <p align="center">
-  <b><a href="#-get-it-on-your-watch">Install</a></b> ·
-  <b><a href="#-all-features">Features</a></b> ·
-  <b><a href="CHANGELOG.md">What's new</a></b> ·
-  <b><a href="#-testers-wanted">Testers wanted</a></b> ·
-  <b><a href="docs/DEVELOPMENT.md">Development</a></b>
+  <a href="https://github.com/fat-toni/PadelPunto/releases/latest"><img src="https://img.shields.io/github/v/release/fat-toni/PadelPunto?label=download&color=d4f53c&labelColor=23272c&style=for-the-badge" alt="Download the latest version"></a>
+  <img src="https://img.shields.io/badge/Amazfit-Bip%206-d4f53c?labelColor=23272c&style=for-the-badge" alt="Amazfit Bip 6">
+  <img src="https://img.shields.io/badge/Zepp%20OS-4%2B-d4f53c?labelColor=23272c&style=for-the-badge" alt="Zepp OS 4+">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPL--3.0-d4f53c?labelColor=23272c&style=for-the-badge" alt="GPL-3.0 License"></a>
+</p>
+
+<p align="center">
+  <a href="#-get-it-on-your-watch">Install</a> ·
+  <a href="#-features">Features</a> ·
+  <a href="CHANGELOG.md">What's new</a> ·
+  <a href="#-testers-wanted">Testers wanted</a> ·
+  <a href="docs/DEVELOPMENT.md">Development</a>
 </p>
 
 <h3 align="center">
@@ -64,62 +71,64 @@
   </tr>
 </table>
 
-## 📋 All features
+## ✨ Features
 
-- **Scoring modes:** Advantage, Golden Point or Star Point.
-- **Match formats:** 1 set or best of 3; sets to 6 games or short sets to 4 (tiebreak at 4:4).
-  Third set as a normal set, without tiebreak (play on at 6:6 until two games ahead, FIP rule 1.4),
-  or as a match tiebreak to 7 or to 10.
-- **Your point of view:** your team at the bottom, the opponents at the top, each card tinted in its team color.
-  A green bar on the card shows who serves and from which side, as you see it on court.
-- **Who serves first:** pick a team, or let a spinning padel racket decide (a fair 50:50 draw).
-- **Change of ends** after games 1, 3, 5 … (official rule), only after a set, or never, with a double vibration or just a hint on screen.
-- **Rest timer** (optional): counts down 90 s at a change of ends and 2 minutes after a set, as FIP rules allow.
-- **Score call** (optional): serving team first, tiebreak numbers too, and the winner's team color when a game is won.
-  An offline voice in English (the padel standard), with low or high volume.
-- **Undo** any number of points.
-- **Court time:** a firm vibration 5, 10 or 15 minutes before your booking ends and when time is up, even when the app is closed.
-- **Team names and colors:** names up to 8 characters via the watch keyboard, 8 colors to choose from.
-- **History** of the last 30 matches.
-- **Heart rate, clock and match time** on screen; heart rate can be turned off to save battery.
-- **Battery-friendly:** widgets only redraw when their value changes, and the clock wakes the watch only once a minute.
-- **Diagnostics:** tap the logo on the info page 5 times quickly to see the watch model, Zepp OS and API level, app storage and the error log.
+**🏆 Rules**
+
+- **Scoring:** Advantage, Golden Point or Star Point
+- **Format:** 1 set or best of 3 · sets to 6, or short sets to 4 with a tiebreak at 4:4
+- **Third set:** normal, without tiebreak (FIP rule 1.4), or a match tiebreak to 7 or 10
+- **Change of ends:** after games 1, 3, 5 … (official), only after a set, or never
+- **Rest timer** (optional): 90 s at a change of ends, 2 min after a set, as FIP rules allow
+
+**⌚ On court**
+
+- **Your point of view:** your team at the bottom, a green bar shows who serves from which side
+- **Who serves first:** pick a team, or let a spinning racket decide (a fair 50:50)
+- **Score call** (optional): in English, the padel standard, offline, low or high volume
+- **Undo** any number of points
+- **Court time:** a firm buzz before your booking ends, even with the app closed
+- **Heart rate, clock and match time** on screen
+
+**⚙️ Around the match**
+
+- **Team names and colors:** names up to 8 characters, 8 colors
+- **History** of the last 30 matches
+- **Languages:** English, German and Spanish
+- **Battery-friendly:** redraws only what changes, wakes the watch once a minute
+- **Diagnostics:** tap the logo on the info page 5 times for watch, storage and error log
 
 ## ⌚ Get it on your watch
 
-Padel Punto runs on the **Amazfit Bip 6** (Zepp OS 4 or newer). It is not in the Zepp app store yet.
-Grab the newest version from the **[Releases](https://github.com/fat-toni/PadelPunto/releases)** and install it:
+Padel Punto runs on the **Amazfit Bip 6** (Zepp OS 4 or newer). It is not in the Zepp app store yet;
+grab the newest version from the **[Releases](https://github.com/fat-toni/PadelPunto/releases/latest)**.
 
-- **With the Zepp app:** install Node.js, download Padel Punto, run `zeus preview` and scan the QR code with your phone.
-- **With [Gadgetbridge](https://gadgetbridge.org)** (a free Android app used instead of the Zepp app): download the
-  `.zab` file (the finished app package) from the release on your phone and open it with Gadgetbridge. No computer needed.
+| | 📱 With the Zepp app | 🤖 With Gadgetbridge |
+|---|---|---|
+| **For you if** | you use the Zepp app (iPhone or Android) | you already use [Gadgetbridge](https://gadgetbridge.org) on Android instead of the Zepp app |
+| **You need** | a computer with Node.js | nothing else |
+| **How** | run `zeus preview`, scan the QR code | open the `.zab` file from the release with Gadgetbridge |
 
-👉 **[Step-by-step guide](docs/INSTALL.md)** (Windows, macOS and Linux)
+👉 **[Step-by-step guide](docs/INSTALL.md)** for both ways (Windows, macOS and Linux)
 
 ## 🙋 Testers wanted
 
-Padel Punto is made for the Bip 6, but I would love to bring it to **more Amazfit watches** with Zepp OS 4 or newer,
-for example with round screens like the Active 2, Balance or T-Rex 3.
-I only have a Bip 6, so I need people who play padel and **own another Amazfit watch** to try test builds on court.
-
-How you can help:
-
-1. Open an **[issue](https://github.com/fat-toni/PadelPunto/issues/new?title=Tester:%20)** with your watch model
-   and its Zepp OS version (on the watch: Settings → About).
-2. You get a test build for your watch.
-3. Play a match or two and tell me what looks wrong or does not fit on the screen. Photos of the watch help a lot.
+> [!TIP]
+> **Got another Amazfit watch with Zepp OS 4+?** Padel Punto is made for the Bip 6, and I would love to bring it to
+> more watches, for example with round screens like the Active 2, Balance or T-Rex 3.
+>
+> 1. Open an **[issue](https://github.com/fat-toni/PadelPunto/issues/new?title=Tester:%20)** with your watch model and
+>    its Zepp OS version (on the watch: Settings → About).
+> 2. You get a test build for your watch.
+> 3. Play a match or two and tell me what looks wrong. Photos of the watch help a lot.
 
 ## 🧪 Tested like a final
 
-Every rule is checked against 28,800 simulated matches, and the whole app runs on a simulated watch that gets 18,000 random taps and swipes.
-Curious, or want to help? See **[Development](docs/DEVELOPMENT.md)**.
+Every rule is checked against **28,800 simulated matches**, and the whole app runs on a simulated watch that gets
+**18,000 random taps and swipes**. Curious, or want to help? See **[Development](docs/DEVELOPMENT.md)**.
 
 ---
 
 <p align="center">
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/github/package-json/v/fat-toni/PadelPunto?label=version&color=d4f53c&labelColor=23272c" alt="Version"></a>
-  <img src="https://img.shields.io/badge/Zepp%20OS-4%2B-d4f53c?labelColor=23272c" alt="Zepp OS 4+">
-  <a href="LICENSE"><img src="https://img.shields.io/github/license/fat-toni/PadelPunto?color=d4f53c&labelColor=23272c" alt="GPL-3.0 License"></a>
-  <br>
   <sub>Made with 🎾 for padel players by Fat Toni &amp; Claude · Code: <a href="LICENSE">GPL-3.0</a> © 2026 Fat Toni · Voices: see <a href="CREDITS.md">credits</a></sub>
 </p>
