@@ -1,10 +1,16 @@
-# Changelog – Padel Punto
+# 📝 Changelog – Padel Punto
 
-All changes to Padel Punto, newest version first.
+All changes to Padel Punto, newest version first. Downloads are on the [Releases page](https://github.com/fat-toni/PadelPunto/releases).
 
-## 1.7.0 – 2026-10-20
+**Versions:** [1.7.0](#170--2026-10-20) · [1.6.0](#160--2026-10-17) · [1.5.0](#150--2026-10-14) · [1.4.0](#140--2026-10-10) · [1.3.0](#130--2026-10-07) · [1.2.1](#121--2026-10-04) · [1.2.0](#120--2026-10-02) · [1.1.0](#110--2026-09-28) · [1.0.0](#100--2026-09-24)
 
-### New
+← [Back to the README](README.md)
+
+## 1.7.0 · 2026-10-20
+
+> Short sets, a court timer, a clearer English score call and a new logo.
+
+### ✨ New
 
 - **Short sets:** The new option “Games per set” (Rules) offers short sets to 4 games next to 6
   (FIP alternative scoring): a set is won with 4 games and a lead of two, e.g. 4:2 or 5:3; at 4:4 a
@@ -15,7 +21,7 @@ All changes to Padel Punto, newest version first.
   up”, even when the app is closed. “OK” takes you back into the running match. The end time shows
   below the clock button; “Clear” removes it.
 
-### Changed
+### 🔧 Changed
 
 - **Tidier options:** “Heart rate in match” now sits under “General”, which makes “In the match” shorter.
 - **Call volume only with the score call:** While “Score call” is off, “Call volume” is greyed
@@ -24,17 +30,20 @@ All changes to Padel Punto, newest version first.
   was picked from several takes for how well it can be understood. The score call is now always
   in English, the padel standard, whatever the app language: “Score call (English)”.
 - **Logo:** The racket now has a diamond-shaped head, so it looks more like a padel racket.
+- **Info:** The developers are now listed as “Fat Toni & Claude”.
 - **License:** The code is now under the GNU GPL v3 (before: MIT). You may still use, change and
   share it freely; changed versions you pass on must stay open source under the same license.
 
-### Fixed
+### 🐞 Fixed
 
 - Leaving a match just as the score call was loading its next word still played that word on the
   start screen.
 
-## 1.6.0 – 2026-10-17
+## 1.6.0 · 2026-10-17
 
-### New
+> The watch calls the score out loud.
+
+### ✨ New
 
 - **Score call:** After every point the watch calls out the score on its speaker, the serving
   team first: “thirty – fifteen”, “fifteen all”, “deuce”, “advantage server” / “advantage
@@ -45,14 +54,16 @@ All changes to Padel Punto, newest version first.
 - **Call volume:** Low or High. During a match the app sets the watch volume to it and
   puts it back afterwards.
 
-### Improved
+### 🔧 Improved
 
 - **Roomier start screen:** More space between logo, name and buttons. With an open match the logo
   gets smaller, so “Continue” fits and the lower buttons stay out of the corners.
 
-## 1.5.0 – 2026-10-14
+## 1.5.0 · 2026-10-14
 
-### New
+> Spin a racket to pick the server, a third set without tiebreak and a serve bar you can see in the sun.
+
+### ✨ New
 
 - **Random serve:** “Who serves first?” has a “Random” button. It brings up a padel racket and turns
   into “Spin”: the racket spins, slows down and stops with its head pointing at the team that serves.
@@ -62,7 +73,7 @@ All changes to Padel Punto, newest version first.
 - **Match tiebreak to 7:** Instead of the third set there can now also be a match tiebreak to 7
   (with a lead of two points), next to the one to 10.
 
-### Improved
+### 🔧 Improved
 
 - **Serve visible in sunlight:** Instead of the small serve boxes next to the team name, a green bar
   now lights up on the left or right edge of the serving team’s card, on the side the serve comes
@@ -78,9 +89,11 @@ All changes to Padel Punto, newest version first.
 - When the watch storage is full, “Who serves first?” now says so instead of silently going back to
   the start screen.
 
-## 1.4.0 – 2026-10-10
+## 1.4.0 · 2026-10-10
 
-### New
+> Change ends like in leisure play, a break timer, a big set banner and a diagnosis page.
+
+### ✨ New
 
 - **Change ends like in leisure play:** New option “Change ends” under Rules: after games 1, 3, 5 …
   (official rule, default), only after the set, or never. The previous option is now called “Change-ends
@@ -99,7 +112,7 @@ All changes to Padel Punto, newest version first.
 - If something goes wrong in the app, it keeps running and remembers the error for the diagnosis page; a
   short notice appears.
 
-### Changed
+### 🔧 Changed
 
 - **Team cards in team colors:** The cards in the match and on “Who serves first?” are tinted dark in their
   team's color, so you can tell the teams apart without reading.
@@ -107,15 +120,17 @@ All changes to Padel Punto, newest version first.
 - **“Leave” goes to the start page:** In a match, “Leave” now takes you to the start page instead of out
   of the app. The match stays saved and carries on with “Continue”.
 
-## 1.3.0 – 2026-10-07
+## 1.3.0 · 2026-10-07
 
-### New
+> Tidier options, a roomier team card and safer storage.
+
+### ✨ New
 
 - **Default names with a long press:** In the options, press and hold “Team 1 name” or “Team 2 name” to
   get the default name back (“Us” or “Them”, in the chosen language). A short tap opens the keyboard as
   before. A hint below the team colors reminds you of this.
 
-### Changed
+### 🔧 Changed
 
 - The options are now sorted into groups: Rules, Teams, In the match and General, with easy-to-read
   headings.
@@ -135,14 +150,14 @@ All changes to Padel Punto, newest version first.
   first?” in Spanish, the line with date, mode and duration in History, and long values in the options.
 - After a match, waking the watch shows the watch face again instead of the app.
 
-### Faster and more efficient
+### ⚡ Faster and more efficient
 
 - During a match the app now wakes the watch only once a minute instead of twice to update the time and
   the match duration.
 - Each point writes only about half as much to the watch: the points and the rules are saved, and the
   score is worked out from them when the match is opened.
 
-### Fixed
+### 🐞 Fixed
 
 - When the watch's storage is full, an ended match is no longer lost. It stays saved and can be resumed
   with “Continue” until there is room again; a notice appears.
@@ -152,27 +167,31 @@ All changes to Padel Punto, newest version first.
   settings are reset to their defaults.
 - After winning a match tiebreak, the “GAMES” tile showed one game too many (1:0 instead of 0:0).
 
-## 1.2.1 – 2026-10-04
+## 1.2.1 · 2026-10-04
 
-### New
+> Leave a match without ending it.
+
+### ✨ New
 
 - **Leave a match without ending it:** After tapping “End”, “Undo” turns into “Leave” for 3 seconds. It
   takes you out of the app, e.g. to quickly check something else. The match stays saved and goes on with
   “Continue”.
 
-### Changed
+### 🔧 Changed
 
 - **Swiping locked during a match:** Swiping across the screen while playing no longer drops you into the
   watch's app menu by accident. The only way out is “End”.
 - Swiping across a card instead of tapping it no longer gives a point.
 
-### Fixed
+### 🐞 Fixed
 
 - A card sometimes stayed highlighted after dragging a finger across it.
 
-## 1.2.0 – 2026-10-02
+## 1.2.0 · 2026-10-02
 
-### New
+> Watch buttons locked during a match, heart rate can be turned off.
+
+### ✨ New
 
 - **Buttons locked during a match:** While a match is running, the watch buttons do nothing. You can no
   longer leave the match by accident when your wrist presses a button during a shot. Leave via “End” or
@@ -182,7 +201,7 @@ All changes to Padel Punto, newest version first.
 - **History:** The 10 newest matches are shown first, older ones with “Show older”. After deleting a
   match, the list stays where it was.
 
-### Changed
+### 🔧 Changed
 
 - Points are now given only by tapping a team card. The up and down buttons did not work as intended on
   the Bip 6 and are now locked like all buttons during a match.
@@ -190,21 +209,23 @@ All changes to Padel Punto, newest version first.
   longer covers any part you can tap.
 - In the history, date, mode and duration share one line.
 
-### Fixed
+### 🐞 Fixed
 
 - A match abandoned during a tiebreak at 6:6 now shows the tiebreak score in the history, e.g. “6:6(4:2)”.
 - A team card stayed highlighted when your finger slid off it while tapping.
 - If the watch cannot save a match (e.g. storage full), the app no longer crashes: the match goes on
   and a notice appears.
 
-### Other
+### 📦 Other
 
 - The app no longer needs the permission for the old storage. Data from versions before 1.0.0 is no
   longer imported.
 
-## 1.1.0 – 2026-09-28
+## 1.1.0 · 2026-09-28
 
-### New
+> Your team at the bottom, and single matches can be deleted.
+
+### ✨ New
 
 - **From your point of view:** Your team is now at the bottom and your opponents at the top, both during
   the match and when choosing who serves first. The opponents' mini court is mirrored: when they serve from
@@ -213,12 +234,12 @@ All changes to Padel Punto, newest version first.
 - **Delete single matches from the history:** Press and hold a card until it turns red, then tap it again.
   Without a second tap the card returns to normal after 3 seconds. Scrolling never triggers it.
 
-### Changed
+### 🔧 Changed
 
 - **Team colors only last while the app is running.** On the next start they are back to green and blue.
   Team names and all other options stay saved.
 
-### Faster and more efficient
+### ⚡ Faster and more efficient
 
 - The clock and the match duration wake the watch only once a minute instead of every 10 seconds.
 - After a point, only what actually changed is redrawn.
@@ -226,15 +247,17 @@ All changes to Padel Punto, newest version first.
 - Scoring and Undo need less processing time.
 - A match left open in version 1.0.0 can simply be continued after the update.
 
-### Fixed
+### 🐞 Fixed
 
 - The app could crash at deuce (40:40) in Advantage mode.
 
-## 1.0.0 – 2026-09-24
+## 1.0.0 · 2026-09-24
+
+> The first version for the Amazfit Bip 6.
 
 First version for the Amazfit Bip 6.
 
-### Scoring
+### 🏆 Scoring
 
 - Three scoring modes: **Advantage** (classic), **Golden Point** (one deciding point at 40:40) and
   **Star Point** (FIP 2026: two advantages, the third deuce is decided by one point).
@@ -242,7 +265,7 @@ First version for the Amazfit Bip 6.
 - Tiebreak to 7 at 6:6, serving in the tiebreak follows the 1-2-2 pattern.
 - Change-of-ends reminder after every odd game and every 6 points in a tiebreak.
 
-### Match
+### 🎾 Match
 
 - Tap a team's card to give it the point, or use the up and down buttons.
 - Large point display (0/15/30/40/AD) and four bars for 15, 30, 40 and advantage.
@@ -256,7 +279,7 @@ First version for the Amazfit Bip 6.
 - **End** finishes the match after a second tap. A match without a winner is saved as “Abandoned”.
 - To pause, just leave the app and tap “Continue” later.
 
-### Other screens
+### 📱 Other screens
 
 - **Start:** “Continue” for an open match, “New match”, “Options”, “History” and info.
 - **Serve:** Before each match you choose which team serves first.
@@ -265,7 +288,7 @@ First version for the Amazfit Bip 6.
 - **History:** the last 30 matches with date, mode, duration, set scores and winner.
 - **Info:** version and developer.
 
-### Watch and controls
+### ⌚ Watch and controls
 
 - Full screen with its own clock, in 12- or 24-hour format as set on the watch.
 - **Display in match:** “Always on” keeps the screen lit, even when you lower your wrist or cover it with
