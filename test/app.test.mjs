@@ -332,13 +332,6 @@ test('options: "Lautstärke" is greyed out and does nothing while "Ansage" is of
   assert.equal(w.find(T.volLow).props.color, C.dim)
 })
 
-test('diagnosis: greets with one of the jokes, in the app language', () => {
-  w.launch()
-  openDiag()
-  const jokes = [T.joke1, T.joke2, T.joke3]
-  assert.equal(w.texts().filter((t) => jokes.includes(t)).length, 1)
-})
-
 test('diagnosis: a watch without a player says so', () => {
   w.zos.sound.noPlayer = true
   w.launch()

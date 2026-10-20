@@ -1,4 +1,4 @@
-// Diagnosis, hidden: 5 quick taps on the logo on Info. Greets with a joke, shows the watch (model, display,
+// Diagnosis, hidden: 5 quick taps on the logo on Info. Shows the watch (model, display,
 // Zepp OS, API level, build), storage (the app's files, the log, free space), a sound test and
 // the error log.
 // Opened with push(); the system back gesture returns.
@@ -34,8 +34,6 @@ const FILES = ['cfg', 'match', 'log', 'errors']
 // "¡Pádel Punto!" in Spanish (tools/voice.py). The docs say file paths start in the assets folder
 // but show only 'data://' in their example, so the test tries both spellings in turn.
 const SOUND_PATHS = ['sound/padel_punto.mp3', 'assets://sound/padel_punto.mp3']
-// A small joke as a reward for finding this page, one of joke1 … joke3 at random.
-const JOKES = 3
 function attempt(fn, fallback) {
   try {
     return fn()
@@ -53,8 +51,6 @@ Page(
       fullScreen()
       this.stopClock = header(tr('diag'))
       this.y = HEADER_H
-      this.line(tr(`joke${1 + Math.floor(Math.random() * JOKES)}`), C.ball)
-
       const dev = attempt(getDeviceInfo, null) || {}
       const sys = attempt(getSystemInfo, null) || {}
       const disk = attempt(getDiskInfo, null)
