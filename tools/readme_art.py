@@ -1,10 +1,12 @@
 # Draws the pictures for the GitHub README from the simulator screenshots in docs/images/screenshots:
-# the banner (also used as the repo's social preview) and each screen in a Bip 6 watch frame.
+# the banner (also used as the repo's social preview, with an Active 3 behind the Bip 6) and each
+# screen in a Bip 6 watch frame.
 # The racket spin (docs/images/watch/serve-spin.webp, animated) is drawn from the widgets
 # that tools/serve_spin.mjs records on the simulated watch, in Roboto like the simulator's font
 # (downloaded once into ~/.cache/padelpunto).
 # Usage: python3 tools/readme_art.py   (writes docs/images/banner.png and docs/images/watch/*.png)
 import json
+import math
 import os
 import subprocess
 import sys
@@ -56,6 +58,50 @@ def watch(shot, k=1.0):
     shine = Image.new('RGBA', img.size, (0, 0, 0, 0))
     ImageDraw.Draw(shine).polygon([(g, g), (W * 0.55, g), (g, H * 0.42)], fill=(255, 255, 255, 10))
     img.alpha_composite(shine)
+    return img.resize((round(img.width * k / S), round(img.height * k / S)), Image.LANCZOS)
+
+# The same screenshot on a round screen (466 px) in an Active 3 style case: steel rim, dark bezel
+# with minute ticks, two buttons on the right. The square screen is scaled down to fit the circle.
+def round_watch(shot, k=1.0, fit=0.9):
+    S = 4
+    D, bez, body = 466, 20, 30
+    W = (D + 2 * (bez + body)) * S
+    c = W / 2
+    img = Image.new('RGBA', (W + 18 * S, W), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    # two buttons (right), drawn first so the body covers their inner ends
+    for a in (-32, 32):
+        x, y = c + math.cos(math.radians(a)) * c, c + math.sin(math.radians(a)) * c
+        d.rounded_rectangle([x - 30 * S, y - 24 * S, x + 14 * S, y + 24 * S], radius=9 * S, fill=(58, 62, 68))
+    # steel body with a lighter rim
+    d.ellipse([0, 0, W - 1, W - 1], fill=(120, 126, 134))
+    d.ellipse([4 * S, 4 * S, W - 4 * S, W - 4 * S], fill=(52, 56, 62))
+    # bezel with minute ticks
+    g = body * S
+    d.ellipse([g - 6 * S, g - 6 * S, W - g + 6 * S, W - g + 6 * S], fill=(22, 24, 27))
+    r0, r1 = c - g + 4 * S, c - g - 2 * S
+    for i in range(60):
+        a = math.radians(i * 6)
+        r = r1 - (5 * S if i % 5 == 0 else 0)
+        d.line([(c + math.cos(a) * r0, c + math.sin(a) * r0), (c + math.cos(a) * r, c + math.sin(a) * r)],
+               fill=(150, 156, 164) if i % 5 == 0 else (80, 85, 92), width=(2 if i % 5 == 0 else 1) * S)
+    # black glass with the round screen inside
+    d.ellipse([g + bez * S - 8 * S, g + bez * S - 8 * S, W - g - bez * S + 8 * S, W - g - bez * S + 8 * S],
+              fill=(0, 0, 0))
+    shot = shot.convert('RGBA')
+    sw, sh = shot.size
+    ImageDraw.Draw(shot).rectangle([0, 0, sw - 1, sh - 1], outline=(0, 0, 0))  # simulator's 1 px frame
+    screen = Image.new('RGBA', (D * S, D * S), (0, 0, 0, 255))
+    fw, fh = round(sw * fit * S), round(sh * fit * S)
+    screen.alpha_composite(shot.resize((fw, fh), Image.LANCZOS), ((D * S - fw) // 2, (D * S - fh) // 2))
+    mask = Image.new('L', screen.size, 0)
+    ImageDraw.Draw(mask).ellipse([0, 0, D * S - 1, D * S - 1], fill=255)
+    img.paste(screen, ((body + bez) * S, (body + bez) * S), mask)
+    shine = Image.new('RGBA', img.size, (0, 0, 0, 0))
+    ImageDraw.Draw(shine).polygon([(g, g), (W * 0.55, g), (g, W * 0.42)], fill=(255, 255, 255, 10))
+    m = Image.new('L', img.size, 0)
+    ImageDraw.Draw(m).ellipse([g, g, W - g, W - g], fill=255)
+    img.alpha_composite(Image.composite(shine, Image.new('RGBA', img.size, (0, 0, 0, 0)), m))
     return img.resize((round(img.width * k / S), round(img.height * k / S)), Image.LANCZOS)
 
 def shadow(im, blur=28, alpha=150):
@@ -117,7 +163,7 @@ def banner():
         px += tw + 50
 
     shot = lambda n: Image.open(os.path.join(SHOTS, f'{n}.png'))
-    place(img, watch(shot('start'), 0.64), 700, 96, angle=9)
+    place(img, round_watch(shot('start'), 0.6), 660, 120, angle=9)
     place(img, watch(shot('match'), 0.8), 850, 82, angle=-5)
     return img.convert('RGB')
 
