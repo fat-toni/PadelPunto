@@ -129,7 +129,7 @@ test('info shows version 1.7.0 and the developers; back returns without rebuildi
   w.press('i')
   assert.equal(w.url, 'page/info')
   assert.ok(w.has('Version 1.7.0'))
-  assert.ok(w.has('Toni & Claude'))
+  assert.ok(w.has('Fat Toni & Claude'))
   assert.ok(w.has(T.info))
   w.press(T.back)
   assert.equal(w.url, 'page/start')

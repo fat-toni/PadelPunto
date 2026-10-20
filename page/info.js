@@ -9,7 +9,7 @@ import { C, text, fullScreen, header, backButton, onTouch } from '../utils/theme
 import { tr, APP_NAME } from '../utils/i18n'
 import { safePage } from '../utils/errors'
 
-const DEVELOPER = 'Toni & Claude'
+const DEVELOPER = 'Fat Toni & Claude'
 const DIAG_TAPS = 5
 const DIAG_WINDOW_MS = 3000
 

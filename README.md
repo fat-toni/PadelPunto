@@ -120,5 +120,5 @@ Curious, or want to help? See **[Development](docs/DEVELOPMENT.md)**.
   <img src="https://img.shields.io/badge/Zepp%20OS-4%2B-d4f53c?labelColor=23272c" alt="Zepp OS 4+">
   <a href="LICENSE"><img src="https://img.shields.io/github/license/fat-toni/PadelPunto?color=d4f53c&labelColor=23272c" alt="GPL-3.0 License"></a>
   <br>
-  <sub>Made with 🎾 for padel players · Code: <a href="LICENSE">GPL-3.0</a> © 2026 Fat Toni · Voices: see <a href="CREDITS.md">credits</a></sub>
+  <sub>Made with 🎾 for padel players by Fat Toni &amp; Claude · Code: <a href="LICENSE">GPL-3.0</a> © 2026 Fat Toni · Voices: see <a href="CREDITS.md">credits</a></sub>
 </p>
