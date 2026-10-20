@@ -1,0 +1,18 @@
+{
+  "name": "padel-punto",
+  "version": "1.7.0",
+  "description": "Padel score counter for Amazfit watches with Zepp OS",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "test": "node --import ./test/mock/setup.mjs --test test/*.test.mjs",
+    "format": "prettier --write \"**/*.{js,mjs}\"",
+    "check": "prettier --check \"**/*.{js,mjs}\" && npm test"
+  },
+  "author": "Fat Toni",
+  "license": "GPL-3.0-or-later",
+  "devDependencies": {
+    "@zeppos/device-types": "^3.0.0",
+    "prettier": "^3.3.3"
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "configVersion": "v3",
+  "app": {
+    "appId": 20001,
+    "appName": "Padel Punto",
+    "appType": "app",
+    "version": {
+      "code": 9,
+      "name": "1.7.0"
+    },
+    "icon": "icon.png",
+    "vender": "Fat Toni",
+    "description": "Padel Punto: padel score counter with advantage, golden point and star point"
+  },
+  "permissions": [
+    "data:user.hd.heart_rate",
+    "data:os.device.info",
+    "device:os.alarm"
+  ],
+  "runtime": {
+    "apiVersion": {
+      "compatible": "4.0",
+      "target": "4.0",
+      "minVersion": "4.0"
+    }
+  },
+  "targets": {
+    "default": {
+      "module": {
+        "page": {
+          "pages": [
+            "page/start",
+            "page/serve",
+            "page/match",
+            "page/options",
+            "page/history",
+            "page/info",
+            "page/diag",
+            "page/court",
+            "page/courtAlert"
+          ]
+        }
+      },
+      "platforms": [
+        {
+          "st": "s",
+          "dw": 390
+        }
+      ]
+    }
+  },
+  "i18n": {
+    "en-US": {
+      "appName": "Padel Punto"
+    },
+    "de-DE": {
+      "appName": "Padel Punto"
+    },
+    "es-ES": {
+      "appName": "Padel Punto"
+    }
+  },
+  "defaultLanguage": "en-US"
+}
