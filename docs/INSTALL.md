@@ -6,7 +6,7 @@ Padel Punto is not in the Zepp app store yet. Every version is on the
 | | You use | You need |
 |---|---|---|
 | **[A. Zepp app](#a-with-the-zepp-app)** | the official Zepp app on your phone | a computer (Windows, macOS or Linux) and a Zepp account |
-| **[B. Gadgetbridge](#b-with-gadgetbridge)** | [Gadgetbridge](https://gadgetbridge.org) instead of the Zepp app | only your phone |
+| **[B. Gadgetbridge](#b-with-gadgetbridge)** | [Gadgetbridge](https://gadgetbridge.org) instead of the Zepp app | an Android phone with Gadgetbridge already set up |
 
 ## A. With the Zepp app
 
@@ -63,11 +63,27 @@ When you are done, run `zeus logout` and turn developer mode off again.
 
 ## B. With Gadgetbridge
 
-[Gadgetbridge](https://gadgetbridge.org) is a free Android app that can replace the Zepp app and supports the Bip 6.
-It installs Zepp OS apps straight from a file:
+**What is Gadgetbridge?** [Gadgetbridge](https://gadgetbridge.org) is a free, open-source Android app that talks to
+your watch over Bluetooth **instead of the Zepp app**: no Zepp account, no cloud. It supports the Bip 6 and can install
+Zepp OS apps straight from a file, without a computer.
 
-1. On the [Releases page](https://github.com/fat-toni/PadelPunto/releases), download **PadelPunto-<version>.zab** to your phone.
-2. Open the file with Gadgetbridge (or share it to Gadgetbridge) and confirm the install.
+**Is this the right way for you?**
+
+- ✅ You already use Gadgetbridge with your watch: this is the easiest way, just follow the two steps below.
+- ❌ You use the Zepp app: take [way A](#a-with-the-zepp-app). Gadgetbridge replaces the Zepp app, it does not run
+  next to it, so you would set up your watch anew.
+- ❌ You have an iPhone: Gadgetbridge is Android only, take [way A](#a-with-the-zepp-app).
+
+Setting up Gadgetbridge for the first time takes a little effort: the Bip 6 only pairs with a secret key, which you
+get once from your Zepp account. Gadgetbridge explains it in its
+[pairing guide](https://gadgetbridge.org/basics/pairing/huami-xiaomi-server/).
+
+**The `.zab` file** is the finished app package: the whole of Padel Punto in one file. With Gadgetbridge set up:
+
+1. On your phone, open the [Releases page](https://github.com/fat-toni/PadelPunto/releases) and download
+   **PadelPunto-<version>.zab** (under *Assets* of the newest version).
+2. Tap the downloaded file and open it with Gadgetbridge (or share it to Gadgetbridge), then confirm the install.
+   Padel Punto appears in the app list of your watch.
 
 > [!NOTE]
 > This way has not been tried with Padel Punto yet. If it works for you (or not), please open an issue.

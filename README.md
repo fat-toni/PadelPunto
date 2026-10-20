@@ -91,7 +91,8 @@ Padel Punto runs on the **Amazfit Bip 6** (Zepp OS 4 or newer). It is not in the
 Grab the newest version from the **[Releases](https://github.com/fat-toni/PadelPunto/releases)** and install it:
 
 - **With the Zepp app:** install Node.js, download Padel Punto, run `zeus preview` and scan the QR code with your phone.
-- **With [Gadgetbridge](https://gadgetbridge.org):** open the `.zab` file from the release on your phone.
+- **With [Gadgetbridge](https://gadgetbridge.org)** (a free Android app used instead of the Zepp app): download the
+  `.zab` file (the finished app package) from the release on your phone and open it with Gadgetbridge. No computer needed.
 
 👉 **[Step-by-step guide](docs/INSTALL.md)** (Windows, macOS and Linux)
 
