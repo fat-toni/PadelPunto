@@ -1,14 +1,17 @@
-// A simulated Bip 6 for the app tests: loads the real pages, runs their lifecycle (onInit, build,
-// onDestroy) and the router like Zepp OS does, and lets a test tap, hold, slide, press keys,
-// swipe, type on the keyboard and turn the screen off. Time runs only via tick() (mock timers).
+// A simulated watch for the app tests (Bip 6, or the one globalThis.WATCH names): loads the real
+// pages, runs their lifecycle (onInit, build, onDestroy) and the router like Zepp OS does, and
+// lets a test tap, hold, slide, press keys, swipe, type on the keyboard and turn the screen off.
+// Time runs only via tick() (mock timers). Tests tap at points of the 390 px wide design, which
+// are scaled to the watch like px() does, so the same test runs on every watch.
 import { readFileSync } from 'node:fs'
 import { mock } from 'node:test'
-import { resetZos } from './zos.mjs'
+import { resetZos, DEVICE, DESIGN_WIDTH } from './zos.mjs'
 import { resetLang } from '../../utils/i18n.js'
 import { resetErrorToast } from '../../utils/errors.js'
 
 const zos = globalThis.zos
-export const SCREEN = { w: 390, h: 450 }
+export const SCREEN = { w: DEVICE.width, h: DEVICE.height }
+const SCALE = DEVICE.width / DESIGN_WIDTH
 // Zepp OS closes a Mini Program this long after the screen went off (unless relaunch is set).
 export const EXIT_AFTER_OFF_MS = 10000
 
@@ -220,7 +223,7 @@ export class Watch {
       return this
     }
     const b = box(w)
-    return this.tapAt(b.x + b.w / 2, b.y + b.h / 2)
+    return this.touch(b.x + b.w / 2, b.y + b.h / 2)
   }
 
   // Finger down at (x, y), optional moves, held for ms, then lifted. Every stacked widget
@@ -228,7 +231,14 @@ export class Watch {
   // between two touches.
   // scroll: the page scrolls by this much right after the finger lands, without any moves
   // reaching the widgets (the system takes the finger over).
-  tapAt(x, y, { ms = 80, moves = [], leave = false, scroll = 0 } = {}) {
+  // x, y, moves and scroll are design points (390 px wide), see SCALE.
+  tapAt(x, y, { moves = [], scroll = 0, ...rest } = {}) {
+    const k = SCALE
+    return this.touch(x * k, y * k, { ...rest, moves: moves.map(([dx, dy]) => [dx * k, dy * k]), scroll: scroll * k })
+  }
+
+  // The same in screen pixels of this watch.
+  touch(x, y, { ms = 80, moves = [], leave = false, scroll = 0 } = {}) {
     this.tick(250)
     const buttonHit = this.visible().find((w) => w.type === 'BUTTON' && inside(box(w), x, y))
     if (buttonHit) {
@@ -255,19 +265,20 @@ export class Watch {
   // Long press on a text (and its card).
   hold(t, ms = 700) {
     const b = box(this.find(t))
-    return this.tapAt(b.x + b.w / 2, b.y + b.h / 2, { ms })
+    return this.touch(b.x + b.w / 2, b.y + b.h / 2, { ms })
   }
 
   // Finger lands on a text, the page scrolls by dy while the card hears nothing, then lift.
   scrollOn(t, dy = 120, ms = 900) {
     const b = box(this.find(t))
-    return this.tapAt(b.x + b.w / 2, b.y + b.h / 2, { ms, scroll: dy })
+    return this.touch(b.x + b.w / 2, b.y + b.h / 2, { ms, scroll: dy * SCALE })
   }
 
   // Finger lands on a text and slides (scrolling or a swipe across the card).
   slide(t, dy = 60) {
+    dy *= SCALE
     const b = box(this.find(t))
-    return this.tapAt(b.x + b.w / 2, b.y + b.h / 2, {
+    return this.touch(b.x + b.w / 2, b.y + b.h / 2, {
       ms: 200,
       moves: [
         [0, dy / 3],

@@ -5,9 +5,10 @@ import { test, beforeEach, afterEach } from 'node:test'
 import assert from 'node:assert/strict'
 import { Watch, SCREEN } from './mock/watch.mjs'
 import { STRINGS } from '../locales/index.js'
-import { getTextLayout } from './mock/zos.mjs'
+import { getTextLayout, DEVICE, px } from './mock/zos.mjs'
 
 const T = STRINGS.de
+// Points in the 390 px design; on a bigger watch px() gives the screen pixels.
 const CARD_Y = [238, 54] // own team below, opponents on top
 // Default team colors: green (own team) and blue, as dark tints on the cards.
 const GREEN_CARD = 0x1c2c26
@@ -164,9 +165,9 @@ test('diagnosis: watch, app version, storage and the match count', () => {
   w.press(T.end)
   openDiag()
   for (const t of [
-    'Amazfit Bip 6',
-    '10223873',
-    '390×450 eckig',
+    DEVICE.deviceName,
+    String(DEVICE.deviceSource),
+    `${DEVICE.width}×${DEVICE.height} eckig`,
     '5.0 · API 4.2',
     '5.0.1.2',
     '1.7.0 (9)',
@@ -497,13 +498,13 @@ test('sliding across a card or holding it too long gives no point', () => {
   assert.equal(pointText(0), '0')
   // and the card is dark again
   assert.equal(team(0).points.w.props.visible, true)
-  const card = w.page.widgets.find((x) => x.type === 'FILL_RECT' && x.props.y === CARD_Y[0])
+  const card = w.page.widgets.find((x) => x.type === 'FILL_RECT' && x.props.y === px(CARD_Y[0]))
   assert.equal(card.props.color, GREEN_CARD)
 })
 
 test('team cards are tinted in the team colors, also on "Wer schlägt auf?"', () => {
   w.launch().press(T.newGame)
-  const cardAt = (y) => w.page.widgets.find((x) => x.type === 'FILL_RECT' && x.props.y === y).props.color
+  const cardAt = (y) => w.page.widgets.find((x) => x.type === 'FILL_RECT' && x.props.y === px(y)).props.color
   assert.equal(cardAt(236), GREEN_CARD, 'own team below')
   assert.equal(cardAt(96), BLUE_CARD)
   w.tapAt(195, 300)
@@ -1043,9 +1044,9 @@ test('team names: short ones big, long ones smaller but whole, never below 16 px
     startMatch()
     const label = team(0).name.w.props
     assert.equal(label.text, name)
-    assert.ok(label.text_size >= 16 && label.text_size <= 24)
+    assert.ok(label.text_size >= px(16) && label.text_size <= px(24))
     assert.ok(getTextLayout(name, { text_size: label.text_size }).width <= label.w)
-    if (name === 'WIR') assert.equal(label.text_size, 24)
+    if (name === 'WIR') assert.equal(label.text_size, px(24))
   }
 })
 

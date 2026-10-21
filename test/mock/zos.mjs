@@ -5,6 +5,23 @@ import { WIDTHS } from './font.mjs'
 // globalThis.zos, so test/mock/watch.mjs can drive the real pages like a finger on the watch.
 const zos = (globalThis.zos = globalThis.zos || {})
 
+// The square watches Padel Punto runs on (IDs from the Zepp device list). The app is laid out
+// for 390 px wide (app.json "dw"); px() scales that to the watch like Zepp OS does.
+// globalThis.WATCH picks the watch for a test file (see app.bipmax.test.mjs), default Bip 6.
+export const DESIGN_WIDTH = 390
+export const DEVICES = {
+  bip6: { width: 390, height: 450, screenShape: 0, deviceName: 'Amazfit Bip 6', deviceSource: 9765120 },
+  active2Square: {
+    width: 390,
+    height: 450,
+    screenShape: 0,
+    deviceName: 'Amazfit Active 2 (Square)',
+    deviceSource: 10223872,
+  },
+  bipMax: { width: 432, height: 514, screenShape: 0, deviceName: 'Amazfit Bip Max', deviceSource: 11206915 },
+}
+export const DEVICE = DEVICES[globalThis.WATCH || 'bip6']
+
 export function resetZos() {
   Object.assign(zos, {
     widgets: [], // widgets of the page being built (watch.mjs swaps this list per page)
@@ -24,7 +41,7 @@ export function resetZos() {
     scrolledTo: null,
     statusBar: true,
     packageVersion: { code: 0, name: '0.0.0' },
-    device: { width: 390, height: 450, screenShape: 0, deviceName: 'Amazfit Bip 6', deviceSource: 10223873 },
+    device: { ...DEVICE },
     system: { osVersion: '5.0', firmwareVersion: '5.0.1.2', minAPI: '4.2' },
     disk: { total: 4e9, free: 3e9, app: 9e6, watchface: 2e7, music: 0, system: 9e8 },
     alarms: [], // @zos/alarm: { id, url, time (s), store }
@@ -103,7 +120,7 @@ export function createKeyboard(opts) {
 export const deleteKeyboard = () => (zos.keyboard = null)
 
 // ---- @zos/utils ----
-export const px = (n) => n
+export const px = (n) => (n * DEVICE.width) / DESIGN_WIDTH
 
 // ---- @zos/router ----
 export const replace = (opts) => zos.router.push({ kind: 'replace', ...opts })

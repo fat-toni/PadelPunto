@@ -57,7 +57,10 @@ def watch(shot, k=1.0):
     # faint glass reflection on the upper left
     shine = Image.new('RGBA', img.size, (0, 0, 0, 0))
     ImageDraw.Draw(shine).polygon([(g, g), (W * 0.55, g), (g, H * 0.42)], fill=(255, 255, 255, 10))
-    img.alpha_composite(shine)
+    # only on the glass, not over the rounded corner onto the body
+    m = Image.new('L', img.size, 0)
+    ImageDraw.Draw(m).rounded_rectangle([g, g, W - g, H - g], radius=92 * S, fill=255)
+    img.alpha_composite(Image.composite(shine, Image.new('RGBA', img.size, (0, 0, 0, 0)), m))
     return img.resize((round(img.width * k / S), round(img.height * k / S)), Image.LANCZOS)
 
 # The same screenshot on a round screen (466 px) in an Active 3 style case: steel rim, dark bezel
@@ -149,18 +152,25 @@ def banner():
 
     d = ImageDraw.Draw(img)
     x = 84
-    img.alpha_composite(logo(132), (x - 10, 78))
-    d.text((x, 222), 'Padel Punto', font=font(96), fill=WHITE)
-    d.text((x, 340), 'No more “wait,', font=font(46, 'Medium'), fill=BALL)
-    d.text((x, 394), 'what’s the score?”', font=font(46, 'Medium'), fill=BALL)
-    d.text((x, 470), 'Padel score counter for the Amazfit Bip 6', font=font(26, 'Regular'), fill=MUTED)
-    # pills
-    px, py, f = x, 524, font(22, 'Medium')
-    for t in ('Golden Point', 'Score calls', 'Court timer', 'EN · DE · ES'):
-        tw = d.textlength(t, font=f)
-        d.rounded_rectangle([px, py, px + tw + 36, py + 42], radius=21, fill=(35, 39, 44), outline=(52, 57, 63), width=2)
-        d.text((px + 18, py + 21), t, font=f, fill=WHITE, anchor='lm')
-        px += tw + 50
+    img.alpha_composite(logo(132), (x - 10, 54))
+    d.text((x, 198), 'Padel Punto', font=font(96), fill=WHITE)
+    d.text((x, 316), 'No more “wait,', font=font(46, 'Medium'), fill=BALL)
+    d.text((x, 370), 'what’s the score?”', font=font(46, 'Medium'), fill=BALL)
+    d.text((x, 446), 'Padel score counter for Amazfit watches', font=font(26, 'Regular'), fill=MUTED)
+    # pills in two rows, left of the watches: first what the watch does for you in the match,
+    # then around it, and last why it is easy to try
+    f = font(20, 'Medium')
+    rows = (('One tap per point', 'Says the score out loud', 'Buzzes at change of ends'),
+            ('Never overrun your booking', 'No phone needed', 'Free & open source'))
+    for row, ts in enumerate(rows):
+        px, py = x, 494 + row * 46
+        for t in ts:
+            tw = d.textlength(t, font=f)
+            d.rounded_rectangle([px, py, px + tw + 30, py + 36], radius=18, fill=(35, 39, 44), outline=(52, 57, 63), width=2)
+            d.text((px + 15, py + 18), t, font=f, fill=WHITE, anchor='lm')
+            px += tw + 42
+    # supported watches, small and quiet at the bottom
+    d.text((x, 604), 'Bip 6 · Active 2 (Square) · Bip Max', font=font(19, 'Regular'), fill=(92, 99, 107))
 
     shot = lambda n: Image.open(os.path.join(SHOTS, f'{n}.png'))
     place(img, round_watch(shot('start'), 0.6), 660, 120, angle=9)

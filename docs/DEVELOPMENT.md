@@ -15,6 +15,7 @@ The tests run without a watch or simulator:
 
 - **Rules:** 28,800 random matches compared against a separate reference model.
 - **Whole app** on a simulated watch (`test/mock/watch.mjs`), plus 18,000 random taps and swipes (`test/monkey.test.mjs`).
+- **Every screen size:** the app tests run on a Bip 6 (390×450) and again on a Bip Max (432×514, `test/app.bipmax.test.mjs`). The Active 2 (Square) has the Bip 6 screen. Watches are listed in `DEVICES` in `test/mock/zos.mjs`; tests tap at points of the 390 px design, scaled like `px()`.
 - **Performance limits:** wake-ups per minute, redraws and file writes per point, widgets per page and leaks (`test/perf.test.mjs`).
 - **Storage** and **texts:** every language has the same keys.
 

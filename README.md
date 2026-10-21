@@ -1,10 +1,10 @@
 <p align="center">
-  <img src="docs/images/banner.png" alt="Padel Punto – No more “wait, what’s the score?” Padel score counter for the Amazfit Bip 6">
+  <img src="docs/images/banner.png" alt="Padel Punto – No more “wait, what’s the score?” Padel score counter for the Amazfit Bip 6, Active 2 (Square) and Bip Max">
 </p>
 
 <p align="center">
   <a href="https://github.com/fat-toni/PadelPunto/releases/latest"><img src="https://img.shields.io/github/v/release/fat-toni/PadelPunto?label=download&color=d4f53c&labelColor=23272c&style=for-the-badge" alt="Download the latest version"></a>
-  <img src="https://img.shields.io/badge/Amazfit-Bip%206-d4f53c?labelColor=23272c&style=for-the-badge" alt="Amazfit Bip 6">
+  <img src="https://img.shields.io/badge/Amazfit-Bip%206%20%C2%B7%20Active%202%20Square%20%C2%B7%20Bip%20Max-d4f53c?labelColor=23272c&style=for-the-badge" alt="Amazfit Bip 6, Active 2 (Square), Bip Max">
   <img src="https://img.shields.io/badge/Zepp%20OS-4%2B-d4f53c?labelColor=23272c&style=for-the-badge" alt="Zepp OS 4+">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPL--3.0-d4f53c?labelColor=23272c&style=for-the-badge" alt="GPL-3.0 License"></a>
 </p>
@@ -100,7 +100,7 @@
 
 ## ⌚ Get it on your watch
 
-Padel Punto runs on the **Amazfit Bip 6** (Zepp OS 4 or newer). It is not in the Zepp app store yet;
+Padel Punto runs on the square Amazfit watches **Bip 6**, **Active 2 (Square)** and **Bip Max** (Zepp OS 4 or newer). It is not in the Zepp app store yet;
 grab the newest version from the **[Releases](https://github.com/fat-toni/PadelPunto/releases/latest)**.
 
 | | 📱 With the Zepp app | 🤖 With Gadgetbridge |
@@ -114,7 +114,7 @@ grab the newest version from the **[Releases](https://github.com/fat-toni/PadelP
 ## 🙋 Testers wanted
 
 > [!TIP]
-> **Got another Amazfit watch with Zepp OS 4+?** Padel Punto is made for the Bip 6, and I would love to bring it to
+> **Got another Amazfit watch with Zepp OS 4+?** Padel Punto is made for the square Bip 6, Active 2 (Square) and Bip Max, and I would love to bring it to
 > more watches, for example with round screens like the Active 2, Balance or T-Rex 3.
 >
 > 1. Open an **[issue](https://github.com/fat-toni/PadelPunto/issues/new?title=Tester:%20)** with your watch model and
