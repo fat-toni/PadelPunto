@@ -19,3 +19,6 @@ CHANGELOG.de.md
 # detailed app description (old README), local only
 BESCHREIBUNG.md
 __pycache__/
+# Zepp App Store pictures and texts, local only
+store/
+tools/store_art.py
