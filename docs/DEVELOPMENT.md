@@ -9,6 +9,7 @@ npm run format    # format the code with Prettier
 npm run check     # check formatting + run tests
 zeus dev          # run in the simulator
 zeus build        # build a .zab into dist/
+npm run build     # check + zeus build, keeps .gitignore (zeus may reset it)
 ```
 
 The tests run without a watch or simulator:
@@ -27,6 +28,7 @@ python3 tools/logo.py assets/default.s    # redraw logo, app icon and the spinni
 ```
 
 `python3 tools/readme_art.py` redraws the banner and the watch pictures for the README from `docs/images/screenshots/` (simulator screenshots, 390×450).
+`python3 tools/store_art.py` draws the Zepp App Store icon (240×240) and screenshots (360×360) into `store/`; the store texts are in [store/LISTING.md](../store/LISTING.md).
 The animated racket spin (`serve-spin.webp`) is recorded on the simulated watch by `tools/serve_spin.mjs` and drawn in Roboto, which the script downloads once into `~/.cache/padelpunto`.
 
 ← [Back to the README](../README.md)

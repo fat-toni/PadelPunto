@@ -7,7 +7,8 @@
   "scripts": {
     "test": "node --import ./test/mock/setup.mjs --test test/*.test.mjs",
     "format": "prettier --write \"**/*.{js,mjs}\"",
-    "check": "prettier --check \"**/*.{js,mjs}\" && npm test"
+    "check": "prettier --check \"**/*.{js,mjs}\" && npm test",
+    "build": "bash tools/build.sh"
   },
   "author": "Fat Toni",
   "license": "GPL-3.0-or-later",
