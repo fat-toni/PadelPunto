@@ -9,14 +9,17 @@ npm run format    # format the code with Prettier
 npm run check     # check formatting + run tests
 zeus dev          # run in the simulator
 zeus build        # build a .zab into dist/
-npm run build     # check + zeus build, keeps .gitignore (zeus may reset it)
+npm run build     # check + zeus build, keeps .gitignore (zeus may reset it); for the Zepp App Store
+npm run build -- --github     # the same without intermediate products, for a GitHub release
+npm run release-check         # all automatic checks before a release (tools/release_check.mjs)
+npm run release-check -- --zab   # the same, then builds and checks dist/PadelPunto-<version>.zab
 ```
 
 The tests run without a watch or simulator:
 
 - **Rules:** 28,800 random matches compared against a separate reference model.
 - **Whole app** on a simulated watch (`test/mock/watch.mjs`), plus 18,000 random taps and swipes (`test/monkey.test.mjs`).
-- **Every screen size:** the app tests run on a Bip 6 (390×450) and again on a Bip Max (432×514, `test/app.bipmax.test.mjs`). The Active 2 (Square) has the Bip 6 screen. Watches are listed in `DEVICES` in `test/mock/zos.mjs`; tests tap at points of the 390 px design, scaled like `px()`.
+- **Every screen size:** the app tests run on a Bip 6 (390×450), again on a Bip Max (432×514, `test/app.bipmax.test.mjs`) and on an Active 2 (Square) (`test/app.active2.test.mjs`, the Bip 6 screen with its own model name). Watches are listed in `DEVICES` in `test/mock/zos.mjs`; tests tap at points of the 390 px design, scaled like `px()`.
 - **Performance limits:** wake-ups per minute, redraws and file writes per point, widgets per page and leaks (`test/perf.test.mjs`).
 - **Storage** and **texts:** every language has the same keys.
 

@@ -22,5 +22,7 @@ __pycache__/
 # Zepp App Store pictures and texts, local only
 store/
 tools/store_art.py
+# Claude Code skills for this project (the full test before a release), local only
+.claude/
 # simulator log
 sim-debug.log

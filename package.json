@@ -8,7 +8,8 @@
     "test": "node --import ./test/mock/setup.mjs --test test/*.test.mjs test/app/*.test.mjs",
     "format": "prettier --write \"**/*.{js,mjs}\"",
     "check": "prettier --check \"**/*.{js,mjs}\" && npm test",
-    "build": "bash tools/build.sh"
+    "build": "bash tools/build.sh",
+    "release-check": "node tools/release_check.mjs"
   },
   "author": "Toni",
   "license": "GPL-3.0-or-later",
