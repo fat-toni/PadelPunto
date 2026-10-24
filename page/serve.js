@@ -1,4 +1,4 @@
-// Asked on every new match: which team serves first. Tapping a team starts the match.
+// Asked on every new match and training: which team serves first. Tapping a team starts the match.
 // "Zufall" brings up a racket between the cards and turns into "Drehen"; that spins the racket:
 // it slows down and stops with its head pointing at the team that serves, that card lights up,
 // and the match starts.
@@ -27,6 +27,23 @@ const SPIN_CY = 230
 
 Page(
   safePage('serve', {
+    // params (JSON, from page/training): { training: true } = a training as set up there.
+    onInit(params) {
+      let p = {}
+      try {
+        p = JSON.parse(params || '{}') || {}
+      } catch (e) {}
+      this.training = p.training === true
+    },
+
+    // The options, for a training with its target, or its total and serve turn.
+    matchCfg() {
+      const cfg = loadCfg()
+      if (!this.training) return cfg
+      if (cfg.trainKind === 'americano') return { ...cfg, total: cfg.trainTotal, serveEvery: cfg.trainServe }
+      return { ...cfg, target: cfg.trainTo }
+    },
+
     build() {
       fullScreen()
       this.stopClock = clock({
@@ -49,7 +66,7 @@ Page(
         align_h: hmUI.align.CENTER_H,
       })
 
-      const cfg = loadCfg()
+      const cfg = this.matchCfg()
       this.names = teamNames(cfg)
       this.cards = [0, 1].map((t) => {
         // Same order as the match screen: opponents on top, own team below.
@@ -151,7 +168,8 @@ Page(
     // If the new match can't be saved (storage full), the page stays and says so; the cards and
     // "Drehen" can be tried again.
     start(t) {
-      if (!saveMatch(newMatch({ ...loadCfg(), firstServer: t }, Date.now()), [])) {
+      const cfg = { ...this.matchCfg(), firstServer: t }
+      if (!saveMatch(newMatch(cfg, Date.now()), [])) {
         this.spinning = false
         toast(tr('saveFailed'))
         return

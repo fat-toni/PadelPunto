@@ -1,6 +1,6 @@
 # Draws the Padel Punto logo (racket + ball) at 4x and downsamples for smooth edges.
 # Usage: python3 tools/logo.py assets/default.s [preview.png]  (writes icon.png and img/: logo, logo_small,
-# racket, clock and clock_press)
+# racket, clock, clock_press, cone, cone_press and ball)
 import math
 import os
 import sys
@@ -107,6 +107,27 @@ def clock_button(size, bg):
     d.ellipse([c - w * 0.7, c - w * 0.7, c + w * 0.7, c + w * 0.7], fill=fg)
     return img.resize((size, size), Image.LANCZOS)
 
+# The round training button on the start screen: a striped cone in the clock's colors.
+def cone_button(size, bg):
+    S = size * 4
+    img = Image.new('RGBA', (S, S), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    d.ellipse([0, 0, S - 1, S - 1], fill=bg)
+    fg = (139, 147, 155, 255)
+    c, top, base, hw, tw = S / 2, S * 0.22, S * 0.68, S * 0.20, S * 0.035
+    d.polygon([(c - tw, top), (c + tw, top), (c + hw, base), (c - hw, base)], fill=fg)
+    # the dark stripe across the middle, then the foot
+    half = lambda y: tw + (hw - tw) * (y - top) / (base - top)
+    y1, y2 = top + (base - top) * 0.42, top + (base - top) * 0.62
+    d.polygon([(c - half(y1), y1), (c + half(y1), y1), (c + half(y2), y2), (c - half(y2), y2)], fill=bg)
+    d.rounded_rectangle([c - S * 0.29, base, c + S * 0.29, base + S * 0.07], radius=S * 0.02, fill=fg)
+    return img.resize((size, size), Image.LANCZOS)
+
+# The ball alone, on the serving team's card in a training (page/match).
+def ball(size):
+    S = size * 4
+    return ball_layer(S, S // 2, S // 2, S // 2 - 2).resize((size, size), Image.LANCZOS)
+
 # (tools/readme_art.py imports logo() from here)
 if __name__ == '__main__':
     out = sys.argv[1]
@@ -117,6 +138,9 @@ if __name__ == '__main__':
     racket(200).save(f'{out}/img/racket.png')
     clock_button(56, (28, 31, 34, 255)).save(f'{out}/img/clock.png')
     clock_button(56, (35, 39, 44, 255)).save(f'{out}/img/clock_press.png')
+    cone_button(56, (28, 31, 34, 255)).save(f'{out}/img/cone.png')
+    cone_button(56, (35, 39, 44, 255)).save(f'{out}/img/cone_press.png')
+    ball(48).save(f'{out}/img/ball.png')
     if len(sys.argv) >= 3:
         # preview of both on black
         prev = Image.new('RGBA', (420, 260), (0, 0, 0, 255))

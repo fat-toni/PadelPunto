@@ -2,12 +2,14 @@
 // their values on tap; name cards open the watch keyboard, color cards cycle the team colors.
 // The page scrolls. It is opened with replace() and left with replace() to the start screen
 // (button, swipe right or back key), so the start screen is rebuilt in the chosen language.
+// The round "i" left of "Fertig" opens the info page, also with replace(); it comes back here.
 import * as hmUI from '@zos/ui'
 import { replace } from '@zos/router'
 import { px } from '@zos/utils'
 import { onGesture, offGesture, GESTURE_RIGHT, onKey, offKey, KEY_BACK, KEY_EVENT_CLICK } from '@zos/interaction'
 import { loadCfg, saveCfg, CHOICES } from '../utils/config'
 import { read } from '../utils/files'
+import { isTraining } from '../utils/training'
 import { C, TEAM_COLORS, HEADER_H, text, fitText, rect, tappable, button, fullScreen, header } from '../utils/theme'
 import { tr, langLabel, resetLang, defaultNames, MAX_NAME } from '../utils/i18n'
 import { safePage, safe } from '../utils/errors'
@@ -17,7 +19,11 @@ const CARD_H = 58
 const STEP = 64
 const SECTION_H = 40
 const HINT_H = 34
+// How long after a tap on a card its new value is written (see saveSoon()).
+const SAVE_MS = 500
 const COLOR_IDS = TEAM_COLORS.map((_, i) => i)
+// The info button's label, the same in every language.
+const INFO = 'i'
 
 // kind 'section': heading above a group; 'hint': small grey line (with `open`: only while a
 // match is open); 'cycle': tap shows the next
@@ -121,8 +127,11 @@ Page(
       this.cfg = loadCfg()
       // paint() of the cards with `when`, redrawn after every change
       this.conditional = []
-      // An open match keeps its rules; changes to them count from the next match.
-      const matchOpen = !!read('match', null)
+      // An open match keeps its rules; changes to them count from the next match. A training
+      // has no such rules, so it gets no hint.
+      const saved = read('match', null)
+      const state = saved && (saved.state || saved)
+      const matchOpen = !!state && !isTraining(state.cfg)
 
       this.stopClock = header(tr('options'))
       let y = HEADER_H
@@ -140,9 +149,23 @@ Page(
         }
       }
 
-      // Same size and place as the "Zurück" button on Info and History, but in ball color.
+      // A round grey "i" like the clock and the cone on the start screen, then "Fertig" in
+      // ball color, as big as "Zurück" on Info and History; the pair is centered.
       button({
-        x: px(95),
+        x: px(61),
+        y: px(y + 4),
+        w: px(56),
+        h: px(56),
+        radius: px(28),
+        text: INFO,
+        text_size: px(30),
+        color: C.muted,
+        normal_color: C.pill,
+        press_color: C.tile,
+        click_func: () => replace({ url: 'page/info' }),
+      })
+      button({
+        x: px(129),
         y: px(y + 6),
         w: px(200),
         h: px(52),
@@ -284,19 +307,36 @@ Page(
           } else {
             this.cfg[opt.key] = opt.values[(opt.values.indexOf(this.cfg[opt.key]) + 1) % opt.values.length]
           }
-          saveCfg(this.cfg)
           // A new language redraws the whole page in it.
           if (opt.key === 'lang') {
+            this.saveNow()
             resetLang()
             replace({ url: 'page/options' })
             return
           }
           paint()
           for (const other of this.conditional) if (other !== paint) other()
+          this.saveSoon()
         },
         onHold,
       )
       paint()
+    },
+
+    // Writing to the watch's storage takes a moment, so a tapped card is redrawn first and saved
+    // SAVE_MS later; quick taps through the values make one write. Leaving the page saves at once.
+    saveSoon() {
+      clearTimeout(this.saveTimer)
+      this.saveTimer = setTimeout(
+        safe('save', () => this.saveNow()),
+        SAVE_MS,
+      )
+    },
+
+    saveNow() {
+      clearTimeout(this.saveTimer)
+      this.saveTimer = null
+      saveCfg(this.cfg)
     },
 
     // Long press on a name card: back to the default name ("Wir", "Die" …); nothing if it is one.
@@ -339,6 +379,7 @@ Page(
     },
 
     onDestroy() {
+      if (this.saveTimer) this.saveNow()
       offGesture()
       offKey()
       if (this.stopClock) this.stopClock()

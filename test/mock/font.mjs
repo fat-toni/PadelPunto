@@ -1,5 +1,5 @@
 // Character widths of the watch font at text size 100, as the diagnosis page on the real watch
-// shows them (Info → 5 taps on the logo → "Schriftbreite"). test/mock/zos.mjs uses these
+// showed them back then (it no longer measures fonts). test/mock/zos.mjs uses these
 // instead of its estimate (still used for characters not listed), and SAMPLE checks the table: the sample
 // sentence measured as a whole on the watch should be close to the sum of its letters.
 // Measured 2026-10-17 on the Bip 6 (photos of the diagnosis page). The space measured alone
@@ -99,6 +99,24 @@ export const WIDTHS = {
   ü: 56,
   '–': 51,
   '…': 73,
+  // Not measured yet (Italian and French came later): accented letters as wide as their base letter
+  // (ì, î like í), the rest guessed.
+  "'": 20,
+  '°': 36,
+  X: 65,
+  x: 50,
+  À: 67,
+  È: 56,
+  Ê: 56,
+  Ì: 28,
+  Î: 28,
+  Ô: 69,
+  à: 53,
+  è: 54,
+  ê: 54,
+  ì: 30,
+  î: 30,
+  ô: 57,
 }
 
 export const SAMPLE = { text: 'Padel Punto · ¿Quién saca primero?', width: 1589 }

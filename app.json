@@ -5,11 +5,11 @@
     "appName": "Padel Punto",
     "appType": "app",
     "version": {
-      "code": 9,
-      "name": "1.7.0"
+      "code": 10,
+      "name": "1.8.0"
     },
     "icon": "icon.png",
-    "vender": "Fat Toni & Claude",
+    "vender": "Toni & Claude AI",
     "description": "Padel Punto: padel score counter with advantage, golden point and star point"
   },
   "permissions": [
@@ -37,7 +37,8 @@
             "page/info",
             "page/diag",
             "page/court",
-            "page/courtAlert"
+            "page/courtAlert",
+            "page/training"
           ]
         }
       },
@@ -57,6 +58,12 @@
       "appName": "Padel Punto"
     },
     "es-ES": {
+      "appName": "Padel Punto"
+    },
+    "it-IT": {
+      "appName": "Padel Punto"
+    },
+    "fr-FR": {
       "appName": "Padel Punto"
     }
   },

@@ -2,9 +2,46 @@
 
 All changes to Padel Punto, newest version first. Downloads are on the [Releases page](https://github.com/fat-toni/PadelPunto/releases).
 
-**Versions:** [1.7.0](#170--2026-10-20) · [1.6.0](#160--2026-10-17) · [1.5.0](#150--2026-10-14) · [1.4.0](#140--2026-10-10) · [1.3.0](#130--2026-10-07) · [1.2.1](#121--2026-10-04) · [1.2.0](#120--2026-10-02) · [1.1.0](#110--2026-09-28) · [1.0.0](#100--2026-09-24)
+**Versions:** [1.8.0](#180--2026-10-24) · [1.7.0](#170--2026-10-20) · [1.6.0](#160--2026-10-17) · [1.5.0](#150--2026-10-14) · [1.4.0](#140--2026-10-10) · [1.3.0](#130--2026-10-07) · [1.2.1](#121--2026-10-04) · [1.2.0](#120--2026-10-02) · [1.1.0](#110--2026-09-28) · [1.0.0](#100--2026-09-24)
 
 ← [Back to the README](README.md)
+
+## 1.8.0 · 2026-10-24
+
+> Training with points only (race or Americano), and the app in Italian and French.
+
+### ✨ New
+
+- **Training:** The new cone right of the logo counts only points, without games and sets. Pick
+  the type on a small settings page, then “Start” and “Who serves first?” as usual:
+  - **Race** to 7, 11, 15 or 21 with a lead of two; at the latest at 9, 15, 19 or 25 whoever is
+    ahead wins. The tile shows honestly how many points each team still needs (at 20:20 to 21 it
+    says 2) and lights up at a match point, which the badge names too (“Match point GREEN”).
+  - **Americano:** 16, 24 or 32 points in all, the serve changes every 2 or 4 points. The tiles
+    show the server's serves left and the other team's next turn, the badge the points still to
+    play. It can end in a draw.
+  - A ball marks the serving team, a bar fills towards the target, the teams are called by their
+    colors (GREEN against BLUE). No change of ends, breaks or score call in a training. Your
+    settings are remembered, and the history shows e.g. “To 21 · 21:15” or “Americano 24”.
+- **Italiano and Français:** The app now speaks Italian and French too. Watches set to one of
+  them pick it up automatically, or choose it under Options → Language. The score call stays in
+  English.
+
+### 🔧 Changed
+
+- **Info** has moved to the end of the options, as a small round “i” next to “Done”; the “i” on the
+  start screen is gone.
+- **Developers** are now listed as “Toni & Claude AI”.
+- **Snappier:** the options react at once to a tap (the value is saved a moment later, and always
+  when you leave), the start screen no longer replays a long open match just to show “Continue”,
+  and texts are measured only once per page.
+
+### 🐞 Fixed
+
+- **Diagnostics:** the full watch name fits (“Amazfit Active 2 (Square)” was cut off), and the
+  saved court time counts in the storage figures.
+- **Options:** with a training left open, the note “Rules apply from the following match” no
+  longer shows, as a training has no such rules.
 
 ## 1.7.0 · 2026-10-20
 

@@ -16,7 +16,7 @@ const SCALE = DEVICE.width / DESIGN_WIDTH
 export const EXIT_AFTER_OFF_MS = 10000
 
 // Every page module calls Page() once when it is first imported; keep the definitions by url.
-const PAGES = ['start', 'serve', 'match', 'options', 'history', 'info', 'diag', 'court', 'courtAlert']
+const PAGES = ['start', 'serve', 'match', 'options', 'history', 'info', 'diag', 'court', 'courtAlert', 'training']
 const defs = {}
 let loading = null
 globalThis.Page = (def) => (defs[loading] = def)

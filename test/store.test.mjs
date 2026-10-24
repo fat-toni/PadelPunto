@@ -3,7 +3,7 @@ import { test, beforeEach } from 'node:test'
 import assert from 'node:assert/strict'
 import { newMatch, addPoint } from '../utils/score.js'
 import { loadCfg, saveCfg, DEFAULT_CFG, COLOR_COUNT } from '../utils/config.js'
-import { loadGame, saveMatch, archiveMatch, loadLog } from '../utils/store.js'
+import { loadGame, saveMatch, archiveMatch, loadLog, matchStatus } from '../utils/store.js'
 
 const files = globalThis.zosFiles
 const put = (key, value) => files.set(`${key}.json`, typeof value === 'string' ? value : JSON.stringify(value))
@@ -82,7 +82,7 @@ test('a broken log reads as empty or loses only the broken entries', () => {
 })
 
 test('unknown option values fall back to the defaults', () => {
-  put('cfg', { mode: 'golden', bestOf: 7, lang: 'fr', hr: 'off', names: ['A', 5], colors: [2, COLOR_COUNT] })
+  put('cfg', { mode: 'golden', bestOf: 7, lang: 'pt', hr: 'off', names: ['A', 5], colors: [2, COLOR_COUNT] })
   const c = loadCfg()
   assert.equal(c.mode, 'golden')
   assert.equal(c.bestOf, DEFAULT_CFG.bestOf)
@@ -104,4 +104,21 @@ test('options are saved with names and team colors', () => {
 test('an old match without its moves file keeps its score', () => {
   put('match', played([0, 0, 1]))
   assert.deepEqual(loadGame().state.points, [2, 1])
+})
+
+test('matchStatus: none, open or won, read from the file without replaying; older files rebuilt', () => {
+  assert.equal(matchStatus(), 'none')
+  saveMatch(played([]), [])
+  assert.equal(matchStatus(), 'none', 'a new match without points is not open')
+  saveMatch(played([0, 1]), [0, 1])
+  assert.equal(matchStatus(), 'open')
+  const moves = Array(48).fill(0) // 6:0 6:0
+  const won = { ...played(moves), endedAt: 5000 }
+  assert.equal(won.winner, 0)
+  saveMatch(won, moves)
+  assert.equal(matchStatus(), 'won')
+  put('match', played([0, 0])) // before 1.1.0: the bare state, no moves in the file
+  assert.equal(matchStatus(), 'open')
+  put('match', '"x"')
+  assert.equal(matchStatus(), 'none')
 })

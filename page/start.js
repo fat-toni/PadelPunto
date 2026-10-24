@@ -1,9 +1,10 @@
-// Start screen: time, logo, then "Weiter" for an open match, "Neues Spiel", "Optionen", "Verlauf" and "i".
+// Start screen: time, logo between the court clock and the training cone, then "Weiter" for an
+// open match, "Neues Spiel", "Optionen" and "Verlauf". Info is reached from the options.
 import * as hmUI from '@zos/ui'
 import { replace, push } from '@zos/router'
 import { px } from '@zos/utils'
 import { hasStarted } from '../utils/score'
-import { loadMatch, archiveMatch } from '../utils/store'
+import { loadMatch, archiveMatch, matchStatus } from '../utils/store'
 import { C, text, button, restyle, clock, fullScreen, confirmTwice } from '../utils/theme'
 import { tr, APP_NAME } from '../utils/i18n'
 import { safePage } from '../utils/errors'
@@ -35,9 +36,12 @@ Page(
 
       // A finished match that was left without pressing "Ende" goes to the log now. If the log
       // can't be written, it stays saved and the next start or "Neues Spiel" tries again.
-      const saved = loadMatch()
-      if (saved && saved.winner !== null) archiveMatch(saved)
-      this.open = !!saved && saved.winner === null && hasStarted(saved)
+      const status = matchStatus()
+      if (status === 'won') {
+        const saved = loadMatch()
+        if (saved && saved.winner !== null) archiveMatch(saved)
+      }
+      this.open = status === 'open'
       // Replacing an open match needs a second tap; the old one goes to the log as abandoned.
       this.newConfirm = confirmTwice(
         (on) => this.paintNew(on ? tr('endOld') : tr('newGame')),
@@ -66,7 +70,7 @@ Page(
         h: px(L.size),
         src: L.src,
       })
-      // Court time on the left of the logo (mirroring "i"); a set end time shows below it.
+      // Court time on the left of the logo (mirroring the cone); a set end time shows below it.
       const btnY = L.top + (L.size - 56) / 2
       button({
         x: px(34),
@@ -91,19 +95,15 @@ Page(
           align_h: hmUI.align.CENTER_H,
         })
       }
-      // Info sits beside the logo, clear of the rounded screen corners.
+      // Training sits right of the logo, clear of the rounded screen corners.
       button({
         x: px(300),
-        y: px(L.top + (L.size - 56) / 2),
+        y: px(btnY),
         w: px(56),
         h: px(56),
-        radius: px(28),
-        text: 'i',
-        text_size: px(30),
-        color: C.muted,
-        normal_color: C.pill,
-        press_color: C.tile,
-        click_func: () => push({ url: 'page/info' }),
+        normal_src: 'img/cone.png',
+        press_src: 'img/cone_press.png',
+        click_func: () => replace({ url: 'page/training' }),
       })
       const nameY = L.top + L.size + 8
       text({

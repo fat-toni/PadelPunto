@@ -48,8 +48,9 @@ export function resetZos() {
     alarmFails: false,
     // @zos/media player: paths that load, what was played, or no player at all.
     sound: { okPaths: null, played: [], noPlayer: false, volume: 60, created: 0 },
-    // What costs battery: widget changes (redraws), timer wake-ups, file writes and their size.
-    cost: { draws: 0, wakeups: 0, pending: new Set(), writes: 0, bytes: 0 },
+    // What costs battery: widget changes (redraws), timer wake-ups, file writes and their size;
+    // and what costs time: measuring a text's width.
+    cost: { draws: 0, wakeups: 0, pending: new Set(), writes: 0, bytes: 0, measures: 0 },
   })
 }
 resetZos()
@@ -108,6 +109,7 @@ export const charWidth = (ch, size) =>
   ((WIDTHS[ch] !== undefined ? WIDTHS[ch] : /[WMwm]/.test(ch) ? 90 : 60) * size) / 100
 export const showToast = ({ text }) => zos.toasts.push(text)
 export const getTextLayout = (t, { text_size, text_width, wrapped }) => {
+  if (zos.cost) zos.cost.measures++
   const width = [...t].reduce((sum, ch) => sum + charWidth(ch, text_size), 0)
   const lines = wrapped && text_width ? Math.max(1, Math.ceil(width / text_width)) : 1
   return { width, height: Math.round(lines * text_size * 1.25) }

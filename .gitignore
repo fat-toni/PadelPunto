@@ -22,3 +22,5 @@ __pycache__/
 # Zepp App Store pictures and texts, local only
 store/
 tools/store_art.py
+# simulator log
+sim-debug.log

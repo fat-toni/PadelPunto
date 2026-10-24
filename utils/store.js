@@ -35,9 +35,39 @@ export function loadMatch() {
   return loadGame().state
 }
 
-// The settings a match keeps for itself: the rules, the first server, names and colors.
+// Whether a saved match is 'open' (points played, not won), 'won' (won but not filed with
+// "Ende") or 'none', for pages that only need to know that ("Weiter" on the start screen).
+// A won match has its end time saved, so the points need not be replayed; only an older or
+// unusual file is rebuilt with loadGame().
+export function matchStatus() {
+  const saved = read('match', null)
+  if (!saved || typeof saved !== 'object') return 'none'
+  const state = saved.state
+  if (state && state.cfg && typeof state.startedAt === 'number' && isMoves(saved.moves)) {
+    if (typeof state.endedAt === 'number') return 'won'
+    return saved.moves.length ? 'open' : 'none'
+  }
+  const s = loadGame().state
+  if (!s) return 'none'
+  return s.winner !== null ? 'won' : hasStarted(s) ? 'open' : 'none'
+}
+
+// The settings a match keeps for itself: the rules (or the training's target, or its total and
+// serve turn), the first server, names and colors.
 // Screen, heart rate, side change buzz and language always come from the current options.
-const MATCH_CFG = ['mode', 'bestOf', 'games', 'decider', 'sides', 'firstServer', 'names', 'colors']
+const MATCH_CFG = [
+  'mode',
+  'bestOf',
+  'games',
+  'decider',
+  'sides',
+  'target',
+  'total',
+  'serveEvery',
+  'firstServer',
+  'names',
+  'colors',
+]
 
 // Returns false if the match could not be saved. Writing the full score and all options as well
 // would cost about twice the bytes on every point.

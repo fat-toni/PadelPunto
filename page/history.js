@@ -9,6 +9,7 @@ import { back, replace } from '@zos/router'
 import { px } from '@zos/utils'
 import { scrollTo, getScrollTop } from '@zos/page'
 import { setsText, durationText } from '../utils/score'
+import { isTraining } from '../utils/training'
 import { loadLog, clearLog, deleteLogEntry } from '../utils/store'
 import {
   C,
@@ -28,7 +29,7 @@ import {
   confirmTwice,
   onTouch,
 } from '../utils/theme'
-import { tr, dateText } from '../utils/i18n'
+import { tr, dateText, colorName } from '../utils/i18n'
 import { safePage, safe } from '../utils/errors'
 
 const CARD_H = 104
@@ -133,8 +134,10 @@ Page(
       if (this.stopClock) this.stopClock()
     },
 
-    // A custom team name as typed, otherwise the default in sentence case ("Wir", "Us", "Nosotros").
+    // A custom team name as typed, otherwise the default in sentence case ("Wir", "Us", "Nosotros");
+    // in a training the color ("Grün").
     winnerName(entry) {
+      if (isTraining(entry)) return colorName(entry, entry.winner)
       const custom = entry.names && entry.names[entry.winner]
       return custom || tr(entry.winner === 0 ? 'usName' : 'themName')
     },
@@ -142,9 +145,14 @@ Page(
     // Four widgets per match: card, one line with date, mode and duration, the set scores, the result.
     buildEntry(entry, y) {
       const card = rect({ x: px(12), y, w: px(366), h: px(CARD_H), radius: px(24), color: C.card })
-      // Gets smaller if needed, e.g. "10/31 12:45 pm · Star Point · 1:30".
+      // Gets smaller if needed, e.g. "10/31 12:45 pm · Star Point · 1:30" or "… · To 21 · 0:20".
+      const kind = entry.target
+        ? tr('trainTo', { n: entry.target })
+        : entry.total
+          ? tr('americanoN', { n: entry.total })
+          : tr(entry.mode)
       const line = fitText(
-        `${dateText(entry.startedAt)} · ${tr(entry.mode)} · ${durationText(entry, entry.endedAt)}`,
+        `${dateText(entry.startedAt)} · ${kind} · ${durationText(entry, entry.endedAt)}`,
         px(330),
         [18, 16, 14].map(px),
       )
@@ -157,7 +165,8 @@ Page(
         color: C.muted,
         text: line.text,
       })
-      const sets = setsText(entry) || '–'
+      // A training is one match tiebreak; its points show without the brackets.
+      const sets = (isTraining(entry) ? setsText(entry).replace(/[[\]]/g, '') : setsText(entry)) || '–'
       const score = text({
         x: px(30),
         y: y + px(36),
@@ -166,9 +175,10 @@ Page(
         text: sets,
         text_size: px(sets.length > 18 ? 24 : 30),
       })
-      // A damaged entry without a winner shows as abandoned.
+      // A damaged entry without a winner shows as abandoned; an Americano can end level.
       const won = !entry.abandoned && (entry.winner === 0 || entry.winner === 1)
-      const resultText = won ? tr('winner', { name: this.winnerName(entry) }) : tr('abandoned')
+      const draw = !entry.abandoned && entry.winner === -1
+      const resultText = won ? tr('winner', { name: this.winnerName(entry) }) : draw ? tr('draw') : tr('abandoned')
       const resultColor = won ? teamColor(entry, entry.winner).text : C.muted
       const result = text({
         x: px(30),

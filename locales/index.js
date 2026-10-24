@@ -4,8 +4,10 @@
 import de from './de'
 import en from './en'
 import es from './es'
+import fr from './fr'
+import it from './it'
 
-export const STRINGS = { de, en, es }
+export const STRINGS = { de, en, es, fr, it }
 
 // Every character in the app's texts (also in capitals, as headings use them), plus digits
 // and the signs the app adds itself; not the braces of placeholders like {name}.

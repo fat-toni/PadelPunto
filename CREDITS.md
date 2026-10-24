@@ -1,6 +1,6 @@
 # Credits
 
-The code of Padel Punto is © 2026 Fat Toni and licensed under the [GNU General Public License v3.0 or later](LICENSE).
+The code of Padel Punto is © 2026 Toni and licensed under the [GNU General Public License v3.0 or later](LICENSE).
 The score-call voices were made with third-party voices, listed below.
 
 ## Score-call voices

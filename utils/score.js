@@ -17,10 +17,14 @@
 // cfg.sides:   'fip'   change ends after games 1, 3, 5 … of a set and every 6 points of a tiebreak
 //              'set'   only after each set (common in leisure play)
 //              'never' no change of ends; a missing value (older saved matches) means 'fip'
+// Training (cfg.target or cfg.total, see utils/training.js): only points are counted, as one
+// match tiebreak; mode, bestOf, games, decider and sides don't matter then.
+
+import { isTraining, trainingServer, trainingWinner } from './training'
 
 export function newMatch(cfg, now) {
-  return {
-    cfg: { ...cfg },
+  const s = {
+    cfg: isTraining(cfg) ? { ...cfg, bestOf: 1 } : { ...cfg },
     sets: [], // { g: [a, b], tb: [a, b] | null, mtb: bool }
     games: [0, 0],
     points: [0, 0],
@@ -34,6 +38,8 @@ export function newMatch(cfg, now) {
     startedAt: now,
     endedAt: null,
   }
+  if (isTraining(cfg)) startTiebreak(s, cfg.target || cfg.total, true)
+  return s
 }
 
 function other(t) {
@@ -76,6 +82,7 @@ function startSet(s) {
 }
 
 export function currentServer(s) {
+  if (isTraining(s.cfg)) return trainingServer(s)
   if (!s.tb) return s.server
   const n = s.points[0] + s.points[1]
   if (n === 0) return s.tbFirstServer
@@ -95,6 +102,7 @@ export function addPoint(prev, t) {
   const events = ['point']
   const p = s.points
   p[t]++
+  if (isTraining(s.cfg)) return trainingPoint(s, events)
 
   const sides = s.cfg.sides || 'fip'
   let gameWon = false
@@ -147,6 +155,21 @@ export function addPoint(prev, t) {
     return { state: s, events }
   }
   startSet(s)
+  return { state: s, events }
+}
+
+// The end of a training: the points go into one match-tiebreak set, as before.
+function trainingPoint(s, events) {
+  const winner = trainingWinner(s.cfg, s.points)
+  if (winner === null) return { state: s, events }
+  const p = s.points
+  s.sets.push({ g: [winner === 0 ? 1 : 0, winner === 1 ? 1 : 0], tb: [p[0], p[1]], mtb: true })
+  s.points = [0, 0]
+  s.winner = winner
+  s.tb = false
+  s.mtb = false
+  events.push('set', 'match')
+  if (winner === -1) events.push('draw')
   return { state: s, events }
 }
 
@@ -239,6 +262,8 @@ export function summary(s, now) {
     names: s.cfg.names,
     colors: s.cfg.colors,
     winner: s.winner,
+    target: s.cfg.target,
+    total: s.cfg.total,
     abandoned,
     sets,
   }

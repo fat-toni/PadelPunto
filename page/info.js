@@ -1,17 +1,21 @@
-// Info: logo, app name, version and developer. Opened with push() from the start screen;
-// the system back gesture returns. DIAG_TAPS quick taps on the logo (a big target, unlike the
+// Info: logo, app name, version and developer. Opened and left with replace() from the options
+// (button, swipe right or back key), as the options' own swipe would otherwise go to the start. DIAG_TAPS quick taps on the logo (a big target, unlike the
 // version line) open the hidden diagnosis page.
 import * as hmUI from '@zos/ui'
-import { back, push } from '@zos/router'
+import { replace } from '@zos/router'
 import { px } from '@zos/utils'
 import { getPackageInfo } from '@zos/app'
-import { C, text, fullScreen, header, backButton, onTouch } from '../utils/theme'
+import { C, text, fullScreen, header, backButton, onTouch, onLeave } from '../utils/theme'
 import { tr, APP_NAME } from '../utils/i18n'
 import { safePage } from '../utils/errors'
 
-const DEVELOPER = 'Fat Toni & Claude'
+const DEVELOPER = 'Toni & Claude AI'
 const DIAG_TAPS = 5
 const DIAG_WINDOW_MS = 3000
+
+function options() {
+  replace({ url: 'page/options' })
+}
 
 function version() {
   try {
@@ -52,14 +56,16 @@ Page(
           taps = [...taps.filter((t) => now - t < DIAG_WINDOW_MS), now]
           if (taps.length < DIAG_TAPS) return
           taps = []
-          push({ url: 'page/diag' })
+          replace({ url: 'page/diag' })
         },
       })
 
-      backButton(384, tr('back'), () => back())
+      backButton(384, tr('back'), options)
+      this.offLeave = onLeave(options)
     },
 
     onDestroy() {
+      if (this.offLeave) this.offLeave()
       if (this.stopClock) this.stopClock()
     },
   }),

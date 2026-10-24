@@ -2,9 +2,11 @@
 import * as hmUI from '@zos/ui'
 import { px } from '@zos/utils'
 import { getScrollTop } from '@zos/page'
+import { onGesture, offGesture, GESTURE_RIGHT, onKey, offKey, KEY_BACK, KEY_EVENT_CLICK } from '@zos/interaction'
 import { Vibrator, VIBRATOR_SCENE_SHORT_LIGHT, VIBRATOR_SCENE_NOTIFICATION } from '@zos/sensor'
 import { safe } from './errors'
 import { time, hourText } from './time'
+import { COLOR_KEYS } from './config'
 
 export const C = {
   card: 0x15181b,
@@ -25,17 +27,10 @@ export const C = {
 export const CONFIRM_MS = 3000
 
 // Selectable team colors (option "Farbe Team 1/2"). Lime is left out, it belongs to the ball.
-// Names are in locales/.
-export const TEAM_COLORS = [
-  { key: 'green', text: 0x5ee08a },
-  { key: 'blue', text: 0x6aa8ff },
-  { key: 'orange', text: 0xffa24c },
-  { key: 'pink', text: 0xff6fae },
-  { key: 'purple', text: 0xb48cff },
-  { key: 'red', text: 0xff5a5f },
-  { key: 'cyan', text: 0x4fd8e0 },
-  { key: 'white', text: 0xe8ecef },
-]
+// Keys in the order of COLOR_KEYS (config.js), names in locales/.
+export const TEAM_COLORS = [0x5ee08a, 0x6aa8ff, 0xffa24c, 0xff6fae, 0xb48cff, 0xff5a5f, 0x4fd8e0, 0xe8ecef].map(
+  (text, i) => ({ key: COLOR_KEYS[i], text }),
+)
 
 // Mixes share (0…1) of color a into color b, channel by channel.
 export function mix(a, b, share) {
@@ -192,7 +187,15 @@ export function text(props) {
 
 // Largest of the given text sizes (big to small) at which the label fits into width w on one line.
 // If it does not fit even at the smallest size, the label is shortened and ends in "…".
+// Measuring on the watch is slow, so each label is measured once and the result kept.
+const fitted = new Map()
 export function fitText(label, w, sizes) {
+  const key = `${label}|${w}|${sizes}`
+  if (!fitted.has(key)) fitted.set(key, measureFit(label, w, sizes))
+  return fitted.get(key)
+}
+
+function measureFit(label, w, sizes) {
   const width = (t, size) => hmUI.getTextLayout(t, { text_size: size, text_width: 1000, wrapped: 0 }).width
   for (const size of sizes) {
     if (width(label, size) <= w) return { text: label, size }
@@ -439,4 +442,28 @@ export function wideButton(y, label, onClick) {
     press_color: C.tile,
     click_func: onClick,
   })
+}
+
+// For a page opened with replace(): swipe right and the back key call leave() instead of the
+// system back, which would close the app. The handlers are shared by all pages, so the page
+// calls the returned function in onDestroy.
+export function onLeave(leave) {
+  onGesture({
+    callback: safe('gesture', (event) => {
+      if (event !== GESTURE_RIGHT) return false
+      leave()
+      return true
+    }),
+  })
+  onKey({
+    callback: safe('key', (key, event) => {
+      if (key !== KEY_BACK || event !== KEY_EVENT_CLICK) return false
+      leave()
+      return true
+    }),
+  })
+  return () => {
+    offGesture()
+    offKey()
+  }
 }

@@ -21,7 +21,7 @@ afterEach(() => w.done())
 
 const cost = () => w.zos.cost
 function resetCost() {
-  Object.assign(cost(), { draws: 0, wakeups: 0, writes: 0, bytes: 0 })
+  Object.assign(cost(), { draws: 0, wakeups: 0, writes: 0, bytes: 0, measures: 0 })
 }
 
 // One point for team t. A banner from a won set is tapped away first (between the cards, so
@@ -67,7 +67,12 @@ test('idle match: one wake-up and at most 2 redraws a minute (clock and match ti
 })
 
 test('idle start, options and history: at most 2 wake-ups a minute', () => {
-  for (const open of [() => {}, () => w.press(T.options), () => w.press(T.history), () => w.press('i')]) {
+  for (const open of [
+    () => {},
+    () => w.press(T.options),
+    () => w.press(T.history),
+    () => w.press(T.options).press('i'),
+  ]) {
     w.done()
     w = new Watch()
     w.launch()
@@ -100,6 +105,19 @@ test('a point costs one file write and few redraws', () => {
   assert.equal(cost().writes, n, 'one write per point')
   assert.ok(cost().draws / n <= 14, `${(cost().draws / n).toFixed(1)} redraws per point`)
   assert.ok(cost().bytes / n <= 280, `${Math.round(cost().bytes / n)} bytes per point`)
+})
+
+test('options: quick taps through a card make one file write and measure each value only once', () => {
+  w.launch()
+  w.press(T.options)
+  resetCost()
+  for (let i = 0; i < 3; i++) w.press(T.optMode) // Golden Point, Star Point, Vorteil (a tap takes 330 ms)
+  assert.equal(cost().writes, 0, 'nothing written while tapping')
+  const firstRound = cost().measures
+  for (let i = 0; i < 3; i++) w.press(T.optMode)
+  assert.equal(cost().measures, firstRound, 'the same values are not measured again')
+  w.tick(600)
+  assert.equal(cost().writes, 1)
 })
 
 test('a 3-hour match with endless deuces: the match file stays small', () => {
@@ -166,9 +184,9 @@ test('widgets per page stay within budget', () => {
   const budget = { 'page/start': 10, 'page/info': 10, 'page/serve': 10, 'page/options': 125, 'page/match': 50 }
   const count = () => w.page.widgets.length
   assert.ok(count() <= budget['page/start'])
-  w.press('i')
+  w.press(T.options).press('i')
   assert.ok(count() <= budget['page/info'])
-  w.key('back').press(T.options)
+  w.key('back')
   assert.ok(count() <= budget['page/options'], `options: ${count()}`)
   w.press(T.done).press(T.newGame)
   assert.ok(count() <= budget['page/serve'])
@@ -185,7 +203,7 @@ test('no leaks: 100 rounds through every page leave no timers, listeners or page
   const timers = cost().pending.size
   for (let i = 0; i < 100; i++) {
     w.press(T.options).press(T.done)
-    w.press('i').key('back')
+    w.press(T.options).press('i').key('back').press(T.done)
     w.press(T.history).press(T.back)
     startMatch()
     tapTeam(0)

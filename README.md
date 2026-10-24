@@ -65,7 +65,7 @@
     </td>
     <td valign="top">
       <h4>↩️ Oops-proof</h4>
-      <p>Undo as many points as you like. An unfinished match is saved and waits for you.</p>
+      <p>Undo as many points as you like, even a mistyped winning point, until you tap “End”. An unfinished match is saved and waits for you.</p>
       <h4></h4>
     </td>
   </tr>
@@ -86,15 +86,16 @@
 - **Your point of view:** your team at the bottom, a green bar shows who serves from which side
 - **Who serves first:** pick a team, or let a spinning racket decide (a fair 50:50)
 - **Score call** (optional): in English, the padel standard, offline, low or high volume
-- **Undo** any number of points
+- **Undo** any number of points, even the winning one until you tap “End”
 - **Court time:** a firm buzz before your booking ends, even with the app closed
 - **Heart rate, clock and match time** on screen
+- **Training:** points only, a race to 7, 11, 15 or 21, or an Americano with 16, 24 or 32 points
 
 **⚙️ Around the match**
 
 - **Team names and colors:** names up to 8 characters, 8 colors
 - **History** of the last 30 matches
-- **Languages:** English, German and Spanish
+- **Languages:** English, German, Spanish, Italian and French
 - **Battery-friendly:** redraws only what changes, wakes the watch once a minute
 - **Diagnostics:** tap the logo on the info page 5 times for watch, storage and error log
 
@@ -130,5 +131,5 @@ Every rule is checked against **28,800 simulated matches**, and the whole app ru
 ---
 
 <p align="center">
-  <sub>Made with 🎾 for padel players by Fat Toni &amp; Claude · Code: <a href="LICENSE">GPL-3.0</a> © 2026 Fat Toni · Voices: see <a href="CREDITS.md">credits</a></sub>
+  <sub>Made with 🎾 for padel players by Toni &amp; Claude AI · Code: <a href="LICENSE">GPL-3.0</a> © 2026 Toni · Voices: see <a href="CREDITS.md">credits</a></sub>
 </p>

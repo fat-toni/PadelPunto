@@ -25,6 +25,7 @@ import {
   hasStarted,
   spokenWords,
 } from '../utils/score'
+import { isTraining, pointsToWin, matchBalls, americanoInfo, trainingProgress } from '../utils/training'
 import { loadCfg } from '../utils/config'
 import { loadGame, saveMatch, archiveMatch, clearMatch } from '../utils/store'
 import {
@@ -67,6 +68,12 @@ const BANNER_TAP_MS = 400
 // FIP rules 2.5 and 2.6: up to 90 s at a change of ends, up to 120 s at the end of a set.
 const PAUSE_MS = 90000
 const SET_PAUSE_MS = 120000
+// Training: the ball on the serving team's card, between the points and the tile (img/ball.png),
+// and the progress bar along the bottom of the card.
+const BALL = 48
+const BALL_X = 214
+const BALL_DY = 66
+const BAR_W = 232
 
 function pillProps(x, w, label, onClick, active) {
   return {
@@ -127,8 +134,10 @@ Page(
       this.pauseOn = cfg.pause === 'on'
       this.pauseUntil = 0
       this.showHr = cfg.hr !== 'off'
+      // Training: points only, a ball for the server, no announcement (not yet) and no change of ends.
+      this.training = isTraining(this.state.cfg)
       // Score announcement (option "Ansage"); also sets the watch volume until the page closes.
-      this.voice = cfg.voice === 'on' ? createVoice(VOICE_LANG, cfg.volume) : null
+      this.voice = cfg.voice === 'on' && !this.training ? createVoice(VOICE_LANG, cfg.volume) : null
       if (this.keepScreenOn) {
         // Screen stays lit for this page; lowering the wrist or covering it with a hand
         // no longer turns it off. The page bright time resets with the page itself.
@@ -171,6 +180,7 @@ Page(
 
       this.colors = [0, 1].map((t) => teamColor(this.state.cfg, t))
       this.teams = [0, 1].map((t) => this.buildTeam(t, px(CARD_Y[t])))
+      if (this.training) this.ball = null
 
       // Badge between the cards for deuce, tiebreak and side change.
       this.hintBg = lazy(rect({ x: px(85), y: px(HINT_Y), w: px(220), h: px(28), radius: px(14), color: C.ball }))
@@ -287,9 +297,14 @@ Page(
         text_size: winLabel.size,
         color: C.ball,
       })
-      const bars = [0, 1, 2, 3].map((i) =>
-        rect({ x: px(30 + i * 56), y: y + px(138), w: px(48), h: px(6), radius: px(3), color: C.off }),
-      )
+      // Four point bars; in a training one progress bar instead, a track and its fill.
+      const bars = this.training
+        ? [C.off, team.text].map((color) =>
+            rect({ x: px(30), y: y + px(138), w: px(BAR_W), h: px(6), radius: px(3), color }),
+          )
+        : [0, 1, 2, 3].map((i) =>
+            rect({ x: px(30 + i * 56), y: y + px(138), w: px(48), h: px(6), radius: px(3), color: C.off }),
+          )
       const tile = rect({ x: px(270), y: y + px(16), w: px(92), h: px(124), radius: px(22), color: team.tile })
       const games = text({
         x: px(270),
@@ -320,6 +335,7 @@ Page(
         win: lazy(win),
         bars: bars.map(lazy),
         games: lazy(games),
+        y,
         rightEdge: t === 0 ? 1 : 0,
       }
     },
@@ -340,7 +356,8 @@ Page(
       this.state = state
       if (events.includes('match')) this.state.endedAt = Date.now()
       if (events.includes('game')) this.flash(t)
-      if (events.includes('set')) this.showBanner(t, events.includes('match'))
+      // An Americano is won by whoever is ahead, not by the last point (-1: level).
+      if (events.includes('set')) this.showBanner(state.winner !== null ? state.winner : t, events.includes('match'))
       // A point played ends any break that is still running.
       this.stopPause()
       if (events.includes('switch')) {
@@ -368,18 +385,26 @@ Page(
     },
 
     // The banner for a won set: title, winner's name and the set's score from the winner's side
-    // (the points of a match tiebreak), on the winner's team color.
+    // (the points of a match tiebreak), on the winner's team color. An Americano that ends level
+    // (t = -1) shows "UNENTSCHIEDEN" and the score on ball color.
     showBanner(t, match) {
       const P = hmUI.prop
       const set = this.state.sets[this.state.sets.length - 1]
       const g = set.mtb ? set.tb : set.g
-      const name = fitText(teamNames(this.state.cfg)[t], px(342), [56, 48, 40, 32].map(px))
+      const draw = t === -1
+      const name = fitText(draw ? '' : teamNames(this.state.cfg)[t], px(342), [56, 48, 40, 32].map(px))
+      const head = fitText(
+        draw ? tr('draw').toUpperCase() : match ? tr('win') : tr('setWon'),
+        px(342),
+        [40, 32, 28].map(px),
+      )
       const [bg, title, nameW, score] = this.banner
-      bg.set(P.COLOR, this.colors[t].text)
-      title.set(P.TEXT, match ? tr('win') : tr('setWon'))
+      bg.set(P.COLOR, draw ? C.ball : this.colors[t].text)
+      title.set(P.TEXT_SIZE, head.size)
+      title.set(P.TEXT, head.text)
       nameW.set(P.TEXT_SIZE, name.size)
       nameW.set(P.TEXT, name.text)
-      score.set(P.TEXT, `${g[t]}:${g[1 - t]}`)
+      score.set(P.TEXT, draw ? `${g[0]}:${g[1]}` : `${g[t]}:${g[1 - t]}`)
       this.banner.forEach((w) => w.set(P.VISIBLE, true))
       this.bannerOn = true
       clearTimeout(this.bannerTimer)
@@ -533,29 +558,104 @@ Page(
         const serving = side !== null && server === t
         w.edges.forEach((edge, i) => {
           const lit = side === 'choice' || (side === 'right') === (i === w.rightEdge)
-          edge.set(P.VISIBLE, serving && lit)
+          edge.set(P.VISIBLE, serving && lit && !this.training)
         })
+        if (this.training) return
         w.bars.forEach((b, i) => {
           b.set(P.VISIBLE, steps !== null && s.winner === null)
           if (steps) b.set(P.COLOR, i < steps[t] ? color : C.off)
         })
       })
+      if (this.training) this.renderTraining()
       this.renderStatus()
       this.renderHr()
+    },
+
+    // Training: the tile shows the points still needed ("NOCH", in ball color at a match point)
+    // or, in an Americano, the server's serves left in this turn and the other team's in the next
+    // (dimmed); the progress bar fills towards the target; the ball sits on the server's card.
+    // All of it goes once the training is over.
+    renderTraining() {
+      const s = this.state
+      const P = hmUI.prop
+      const over = s.winner !== null
+      const balls = matchBalls(s)
+      const info = s.cfg.total ? americanoInfo(s) : null
+      const server = currentServer(s)
+      this.teams.forEach((w, t) => {
+        for (const k of ['tile', 'games', 'caption']) w[k].set(P.VISIBLE, !over)
+        const [track, fill] = w.bars
+        track.set(P.VISIBLE, !over)
+        const share = trainingProgress(s, t)
+        fill.set(P.VISIBLE, !over && share > 0)
+        const bar = { x: px(30), y: w.y + px(138), h: px(6), radius: px(3), color: this.colors[t].text }
+        if (share > 0) fill.set(P.MORE, { ...bar, w: Math.max(px(6), Math.round(px(BAR_W) * share)) })
+        if (over) return
+        const hot = balls.includes(t)
+        const dim = info && t !== server
+        const n = info ? (t === server ? info.serves : info.next) : pointsToWin(s, t)
+        const caption = info ? (t === server ? tr('serves') : tr('servesNext')) : tr('toGo')
+        const fit = fitText(caption, px(88), [16, 14, 12].map(px))
+        w.tile.set(P.COLOR, hot ? C.ball : this.colors[t].tile)
+        w.games.set(P.TEXT, info && n === 0 ? '–' : String(n))
+        w.games.set(P.COLOR, hot ? 0x000000 : dim ? C.dim : 0xffffff)
+        w.caption.set(P.TEXT_SIZE, fit.size)
+        w.caption.set(P.TEXT, fit.text)
+        w.caption.set(P.COLOR, hot ? 0x000000 : dim ? C.dim : C.muted)
+      })
+      this.renderBall(over ? null : server)
+    },
+
+    // The image is created only when first needed: the watch ignores visible: false on a new image.
+    renderBall(t) {
+      const P = hmUI.prop
+      if (t === null) {
+        if (this.ball) this.ball.set(P.VISIBLE, false)
+        return
+      }
+      const props = {
+        x: px(BALL_X),
+        y: this.teams[t].y + px(BALL_DY),
+        w: px(BALL),
+        h: px(BALL),
+        src: 'img/ball.png',
+      }
+      if (!this.ball) this.ball = lazy(hmUI.createWidget(hmUI.widget.IMG, props))
+      else if (this.ballY !== props.y) this.ball.set(P.MORE, props)
+      this.ballY = props.y
+      this.ball.set(P.VISIBLE, true)
+    },
+
+    // The badge between the cards; in a training the target ("Bis 21") or a match point, in an
+    // Americano the points still to play.
+    trainingHint(s) {
+      if (s.cfg.total) {
+        const { left } = americanoInfo(s)
+        return left === 1 ? tr('lastPoint') : tr('pointsLeft', { n: left })
+      }
+      const balls = matchBalls(s)
+      if (balls.length === 2) return tr('decidingPoint')
+      if (balls.length === 1) return tr('matchBall', { name: teamNames(s.cfg)[balls[0]] })
+      return tr('trainTo', { n: s.cfg.target })
     },
 
     renderStatus() {
       const s = this.state
       this.timeW.set(hmUI.prop.TEXT, durationText(s, Date.now()))
       let hint = hintText(deuceInfo(s))
-      if (s.tb) hint = s.mtb ? tr('matchTiebreak') : tr('tiebreak')
+      if (s.tb) hint = this.training ? this.trainingHint(s) : s.mtb ? tr('matchTiebreak') : tr('tiebreak')
       if (s.winner !== null) hint = tr('matchOver')
       const left = this.pauseUntil - Date.now()
       if (left > 0) hint = tr('pauseLeft', { t: clockText(left) })
       if (Date.now() < this.switchUntil) hint = tr('switchSides')
       this.hintBg.set(hmUI.prop.VISIBLE, !!hint)
       this.hintW.set(hmUI.prop.VISIBLE, !!hint)
-      this.hintW.set(hmUI.prop.TEXT, hint)
+      // Smaller if needed, e.g. "Bola de partido NARANJA"; measured only when the text changes.
+      if (hint === this.hint) return
+      this.hint = hint
+      const fit = hint ? fitText(hint, px(210), [20, 18, 16].map(px)) : { text: '', size: px(20) }
+      this.hintW.set(hmUI.prop.TEXT_SIZE, fit.size)
+      this.hintW.set(hmUI.prop.TEXT, fit.text)
     },
 
     renderHr() {

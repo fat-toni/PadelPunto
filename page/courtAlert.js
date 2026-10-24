@@ -8,8 +8,7 @@ import { C, text, button, fullScreen, clock, buzzAlarm } from '../utils/theme'
 import { tr } from '../utils/i18n'
 import { safePage } from '../utils/errors'
 import { read } from '../utils/files'
-import { loadMatch } from '../utils/store'
-import { hasStarted } from '../utils/score'
+import { matchStatus } from '../utils/store'
 import { hourText } from '../utils/time'
 
 // An alarm can be a little late; up to this long before the end it still counts as the reminder.
@@ -55,8 +54,7 @@ Page(
         })
       }
 
-      const saved = loadMatch()
-      const open = !!saved && saved.winner === null && hasStarted(saved)
+      const open = matchStatus() === 'open'
       button({
         x: px(95),
         y: px(344),

@@ -1,6 +1,6 @@
 # 🔒 Privacy Policy – Padel Punto
 
-Last updated: 2026-10-21
+Last updated: 2026-10-24
 
 Padel Punto is a padel score counter for Amazfit watches with Zepp OS. It is free, open source
 and made by one hobby developer. **Padel Punto does not collect, send or share any data.**
@@ -16,8 +16,8 @@ and made by one hobby developer. **Padel Punto does not collect, send or share a
 ## What the app saves on your watch
 
 The app keeps a few small files in its own storage on the watch: the running match (so it waits
-for you after a restart), the last finished matches (history), your options and a short error log
-for the diagnosis page. Team names you enter are part of these files.
+for you after a restart), the last finished matches (history), your options, the court time you
+set with its reminder, and a short error log for the diagnosis page. Team names you enter are part of these files.
 
 These files never leave the watch. Padel Punto has no internet access, no phone-side part, no
 account, no analytics, no ads and no third-party SDKs. Uninstalling the app deletes the files.

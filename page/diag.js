@@ -1,9 +1,9 @@
 // Diagnosis, hidden: 5 quick taps on the logo on Info. Shows the watch (model, display,
 // Zepp OS, API level, build), storage (the app's files, the log, free space), a sound test and
 // the error log.
-// Opened with push(); the system back gesture returns.
+// Opened and left with replace() from Info (button, swipe right or back key).
 import * as hmUI from '@zos/ui'
-import { back, replace } from '@zos/router'
+import { replace } from '@zos/router'
 import { px } from '@zos/utils'
 import { getDeviceInfo, getDiskInfo, SCREEN_SHAPE_ROUND } from '@zos/device'
 import { getSystemInfo } from '@zos/settings'
@@ -23,14 +23,15 @@ import {
   header,
   backButton,
   confirmTwice,
+  onLeave,
 } from '../utils/theme'
 import { tr, dateText } from '../utils/i18n'
 
 const ROW_H = 30
 // Raised by hand with each test build, so a preview on the watch can be told apart from the
 // previous one (the version stays the same until a release).
-const BUILD = '20.10. 15:12'
-const FILES = ['cfg', 'match', 'log', 'errors']
+const BUILD = '24.10. 22:35'
+const FILES = ['cfg', 'match', 'log', 'court', 'errors']
 // "¡Pádel Punto!" in Spanish (tools/voice.py). The docs say file paths start in the assets folder
 // but show only 'data://' in their example, so the test tries both spellings in turn.
 const SOUND_PATHS = ['sound/padel_punto.mp3', 'assets://sound/padel_punto.mp3']
@@ -45,6 +46,10 @@ function attempt(fn, fallback) {
 const mb = (bytes) => (bytes >= 1e9 ? `${(bytes / 1e9).toFixed(1)} GB` : `${(bytes / 1e6).toFixed(1)} MB`)
 const kb = (bytes) => (bytes < 1000 ? `${bytes} B` : `${(bytes / 1000).toFixed(1)} KB`)
 
+function info() {
+  replace({ url: 'page/info' })
+}
+
 Page(
   safePage('diag', {
     build() {
@@ -58,7 +63,8 @@ Page(
       const v = pkg.version && typeof pkg.version === 'object' ? pkg.version : {}
 
       this.section(tr('diagWatch'))
-      this.row(tr('diagModel'), String(dev.deviceName || '?'))
+      // A short label, so long names like "Amazfit Active 2 (Square)" fit.
+      this.row(tr('diagModel'), String(dev.deviceName || '?'), 110)
       this.row('ID', String(dev.deviceSource || '?'))
       const shape = dev.screenShape === SCREEN_SHAPE_ROUND ? tr('diagRound') : tr('diagSquare')
       this.row(tr('diagScreen'), `${dev.width || '?'}×${dev.height || '?'} ${shape}`)
@@ -112,7 +118,8 @@ Page(
         this.y += 72
       }
 
-      backButton(this.y + 10, tr('back'), () => back())
+      backButton(this.y + 10, tr('back'), info)
+      this.offLeave = onLeave(info)
     },
 
     // Plays the test phrase; the status row says how far it got and which path worked.
@@ -164,15 +171,16 @@ Page(
       this.y += 40
     },
 
-    // Label left in grey, value right in white; both get smaller if needed.
-    row(label, value) {
-      const l = fitText(label, px(170), [18, 16, 14].map(px))
-      text({ x: px(30), y: px(this.y), w: px(170), h: px(ROW_H), text: l.text, text_size: l.size, color: C.muted })
-      const v = fitText(value, px(160), [20, 18, 16, 14].map(px))
+    // Label left in grey, value right in white; both get smaller if needed. labelW: the label's
+    // share of the 330 px row.
+    row(label, value, labelW = 170) {
+      const l = fitText(label, px(labelW), [18, 16, 14].map(px))
+      text({ x: px(30), y: px(this.y), w: px(labelW), h: px(ROW_H), text: l.text, text_size: l.size, color: C.muted })
+      const v = fitText(value, px(330 - labelW), [20, 18, 16, 14].map(px))
       const w = text({
-        x: px(200),
+        x: px(30 + labelW),
         y: px(this.y),
-        w: px(160),
+        w: px(330 - labelW),
         h: px(ROW_H),
         text: v.text,
         text_size: v.size,
@@ -215,6 +223,7 @@ Page(
     },
 
     onDestroy() {
+      if (this.offLeave) this.offLeave()
       if (this.player) attempt(() => this.player.stop())
       if (this.clearConfirm) this.clearConfirm.stop()
       if (this.stopClock) this.stopClock()
