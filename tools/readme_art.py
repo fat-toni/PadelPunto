@@ -1,9 +1,9 @@
 # Draws the pictures for the GitHub README: the banner (also used as the repo's social preview, with
-# an Active 3 behind the Bip 6) and each screen in a Bip 6 watch frame. Serve, match and options are
-# simulator screenshots in docs/images/screenshots. The start screen and the training are drawn
-# from the widgets that tools/screens.mjs records on the simulated watch, the racket spin
-# (docs/images/watch/serve-spin.webp, animated) from those of tools/serve_spin.mjs, both in Roboto
-# like the simulator's font (downloaded once into ~/.cache/padelpunto).
+# an Active 3 behind the Bip 6) and each screen in a Bip 6 watch frame. The screens are drawn from
+# the widgets that tools/screens.mjs records on the simulated watch, so they always show the current
+# app; the racket spin (docs/images/watch/serve-spin.webp, animated) from those of
+# tools/serve_spin.mjs. Both in Roboto like the simulator's font (downloaded once into
+# ~/.cache/padelpunto). The bare screens go to docs/images/screenshots.
 # Usage: python3 tools/readme_art.py   (writes docs/images/banner.png and docs/images/watch/*.png)
 import json
 import math
@@ -172,9 +172,8 @@ def banner():
     # supported watches, small and quiet at the bottom
     d.text((x, 604), 'Bip 6 · Active 2 (Square) · Bip Max', font=font(19, 'Regular'), fill=(92, 99, 107))
 
-    shot = lambda n: Image.open(os.path.join(SHOTS, f'{n}.png'))
     place(img, round_watch(recorded()['start'], 0.6), 660, 120, angle=9)
-    place(img, watch(shot('match'), 0.8), 850, 82, angle=-5)
+    place(img, watch(recorded()['match'], 0.8), 850, 82, angle=-5)
     return img.convert('RGB')
 
 # ---- drawing recorded widgets like the watch (only the kinds the recorded pages use) ----
@@ -262,9 +261,10 @@ def serve_spin(k=0.8):
 if __name__ == '__main__':
     os.makedirs(os.path.join(IMAGES, 'watch'), exist_ok=True)
     banner().save(os.path.join(IMAGES, 'banner.png'), optimize=True)
-    for n in ('serve', 'match', 'options'):
-        watch(Image.open(os.path.join(SHOTS, f'{n}.png'))).save(os.path.join(IMAGES, 'watch', f'{n}.png'), optimize=True)
+    os.makedirs(SHOTS, exist_ok=True)
     for n, screen in recorded().items():
+        # the bare screen (390x450), for tools/store_art.py, and the screen in a watch frame
+        screen.convert('RGB').save(os.path.join(SHOTS, f'{n}.png'), optimize=True)
         watch(screen).save(os.path.join(IMAGES, 'watch', f'{n}.png'), optimize=True)
     frames, ms = serve_spin()
     # WebP: a tenth of the size of an animated PNG, with smooth (alpha) edges unlike a GIF
