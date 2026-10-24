@@ -27,7 +27,7 @@ python3 tools/logo.py assets/default.s    # redraw logo, app icon and the spinni
 ~/.cache/padelpunto/tts/bin/python tools/voice.py <voices-dir> assets/default.s   # regenerate the score-call words (setup at the top of the file; licenses in CREDITS.md)
 ```
 
-`python3 tools/readme_art.py` redraws the banner and the watch pictures for the README from `docs/images/screenshots/` (simulator screenshots, 390×450).
-The animated racket spin (`serve-spin.webp`) is recorded on the simulated watch by `tools/serve_spin.mjs` and drawn in Roboto, which the script downloads once into `~/.cache/padelpunto`.
+`python3 tools/readme_art.py` redraws the banner and the watch pictures for the README. Serve, match and options come from `docs/images/screenshots/` (simulator screenshots, 390×450).
+The start screen and the training (`tools/screens.mjs`) and the animated racket spin (`serve-spin.webp`, `tools/serve_spin.mjs`) are recorded on the simulated watch and drawn in Roboto, which the script downloads once into `~/.cache/padelpunto`.
 
 ← [Back to the README](../README.md)

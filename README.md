@@ -29,7 +29,7 @@
   &nbsp;
   <img src="docs/images/watch/serve-spin.webp" alt="A spinning racket decides who serves" width="230">
   &nbsp;
-  <img src="docs/images/watch/options.png" alt="Options" width="230">
+  <img src="docs/images/watch/training.png" alt="Training to 21: match point for green at 20:17" width="230">
 </p>
 
 ## 🎾 Made for the court
@@ -83,7 +83,7 @@
 
 **⌚ On court**
 
-- **Your point of view:** your team at the bottom, a green bar shows who serves from which side
+- **Your point of view:** your team at the bottom, a lime bar shows who serves from which side
 - **Who serves first:** pick a team, or let a spinning racket decide (a fair 50:50)
 - **Score call** (optional): in English, the padel standard, offline, low or high volume
 - **Undo** any number of points, even the winning one until you tap “End”
@@ -97,7 +97,7 @@
 - **History** of the last 30 matches
 - **Languages:** English, German, Spanish, Italian and French
 - **Battery-friendly:** redraws only what changes, wakes the watch once a minute
-- **Diagnostics:** tap the logo on the info page 5 times for watch, storage and error log
+- **Diagnostics:** tap the logo on the info page (Options → i) 5 times for watch, storage and error log
 
 ## ⌚ Get it on your watch
 

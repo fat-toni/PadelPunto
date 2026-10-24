@@ -1,9 +1,9 @@
-# Draws the pictures for the GitHub README from the simulator screenshots in docs/images/screenshots:
-# the banner (also used as the repo's social preview, with an Active 3 behind the Bip 6) and each
-# screen in a Bip 6 watch frame.
-# The racket spin (docs/images/watch/serve-spin.webp, animated) is drawn from the widgets
-# that tools/serve_spin.mjs records on the simulated watch, in Roboto like the simulator's font
-# (downloaded once into ~/.cache/padelpunto).
+# Draws the pictures for the GitHub README: the banner (also used as the repo's social preview, with
+# an Active 3 behind the Bip 6) and each screen in a Bip 6 watch frame. Serve, match and options are
+# simulator screenshots in docs/images/screenshots. The start screen and the training are drawn
+# from the widgets that tools/screens.mjs records on the simulated watch, the racket spin
+# (docs/images/watch/serve-spin.webp, animated) from those of tools/serve_spin.mjs, both in Roboto
+# like the simulator's font (downloaded once into ~/.cache/padelpunto).
 # Usage: python3 tools/readme_art.py   (writes docs/images/banner.png and docs/images/watch/*.png)
 import json
 import math
@@ -173,11 +173,11 @@ def banner():
     d.text((x, 604), 'Bip 6 · Active 2 (Square) · Bip Max', font=font(19, 'Regular'), fill=(92, 99, 107))
 
     shot = lambda n: Image.open(os.path.join(SHOTS, f'{n}.png'))
-    place(img, round_watch(shot('start'), 0.6), 660, 120, angle=9)
+    place(img, round_watch(recorded()['start'], 0.6), 660, 120, angle=9)
     place(img, watch(shot('match'), 0.8), 850, 82, angle=-5)
     return img.convert('RGB')
 
-# ---- drawing recorded widgets like the watch (only the kinds page/serve uses) ----
+# ---- drawing recorded widgets like the watch (only the kinds the recorded pages use) ----
 
 def roboto(size, cache={}):
     if not os.path.exists(ROBOTO):
@@ -208,12 +208,20 @@ def draw_screen(widgets):
             d.rounded_rectangle(box, radius=p.get('radius', 0), fill=rgb(p['color']))
         elif t == 'TEXT':
             draw_text(d, p, p.get('color', 0xffffff))
+        elif t == 'CIRCLE':
+            cx, cy, r = p['center_x'], p['center_y'], p['radius']
+            d.ellipse([cx - r, cy - r, cx + r, cy + r], fill=rgb(p['color']))
+        elif t == 'BUTTON' and p.get('normal_src'):
+            im = Image.open(os.path.join(ASSETS, p['normal_src'])).convert('RGBA')
+            img.alpha_composite(im.resize((p['w'], p['h']), Image.LANCZOS), (p['x'], p['y']))
         elif t == 'BUTTON':
             d.rounded_rectangle(box, radius=p.get('radius', 0), fill=rgb(p['normal_color']))
             draw_text(d, p, p.get('color', 0xffffff))
         elif t == 'IMG':
             # placed at pos_x/pos_y in its box, turned clockwise by angle around center_x/center_y
             im = Image.open(os.path.join(ASSETS, p['src'])).convert('RGBA')
+            if not p.get('pos_x') and not p.get('angle'):
+                im = im.resize((p['w'], p['h']), Image.LANCZOS)
             layer = Image.new('RGBA', (p['w'], p['h']), (0, 0, 0, 0))
             layer.alpha_composite(im, (round(p.get('pos_x', 0)), round(p.get('pos_y', 0))))
             if p.get('angle'):
@@ -227,6 +235,14 @@ def tap(img, x, y):
     ImageDraw.Draw(o).ellipse([x - 30, y - 30, x + 30, y + 30], fill=(255, 255, 255, 70), outline=(255, 255, 255, 170), width=3)
     img.alpha_composite(o)
     return img
+
+# The start screen and the training, drawn from tools/screens.mjs (recorded once per run).
+def recorded(cache={}):
+    if not cache:
+        rec = subprocess.run(['node', '--import', './test/mock/setup.mjs', 'tools/screens.mjs'], cwd=ROOT,
+                             capture_output=True, text=True, check=True)
+        cache.update({n: draw_screen(w) for n, w in json.loads(rec.stdout).items()})
+    return cache
 
 # The racket spin as animation frames: the serve page, a tap on "Random", a tap on "Spin", the spin
 # and the result, then it starts over.
@@ -246,8 +262,10 @@ def serve_spin(k=0.8):
 if __name__ == '__main__':
     os.makedirs(os.path.join(IMAGES, 'watch'), exist_ok=True)
     banner().save(os.path.join(IMAGES, 'banner.png'), optimize=True)
-    for n in ('start', 'serve', 'match', 'options'):
+    for n in ('serve', 'match', 'options'):
         watch(Image.open(os.path.join(SHOTS, f'{n}.png'))).save(os.path.join(IMAGES, 'watch', f'{n}.png'), optimize=True)
+    for n, screen in recorded().items():
+        watch(screen).save(os.path.join(IMAGES, 'watch', f'{n}.png'), optimize=True)
     frames, ms = serve_spin()
     # WebP: a tenth of the size of an animated PNG, with smooth (alpha) edges unlike a GIF
     frames[0].save(os.path.join(IMAGES, 'watch', 'serve-spin.webp'), save_all=True, append_images=frames[1:],
