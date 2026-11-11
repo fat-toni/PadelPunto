@@ -1,6 +1,6 @@
 # 🔒 Privacy Policy – Padel Punto
 
-Last updated: 2026-10-21
+Last updated: 2026-11-11
 
 Padel Punto is a padel score counter for Amazfit watches with Zepp OS. It is free, open source
 and made by one hobby developer. **Padel Punto does not collect, send or share any data.**
@@ -33,4 +33,5 @@ history is in the [GitHub repository](https://github.com/fat-toni/PadelPunto/com
 
 ## Contact
 
-Questions? Open an issue at <https://github.com/fat-toni/PadelPunto/issues>.
+Questions? Write to <padelpunto@mailbox.org> or open an issue at
+<https://github.com/fat-toni/PadelPunto/issues>.

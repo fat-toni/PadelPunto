@@ -7,5 +7,5 @@ Point and Star Point. Free, no ads, no data collection. You find it in the Zepp 
 app → Profile → your watch → App Store → "Padel Punto").
 
 - **Privacy policy:** [PRIVACY.md](PRIVACY.md)
-- **Feedback and bug reports:** [open an issue](https://github.com/fat-toni/PadelPunto/issues),
-  in English, German or Spanish
+- **Feedback and bug reports:** write to <padelpunto@mailbox.org> or
+  [open an issue](https://github.com/fat-toni/PadelPunto/issues), in English, German or Spanish
